@@ -1,0 +1,17 @@
+output_dir: swift-control/Generated/
+
+strings:
+  inputs: swift-control/Resources/Localizations/en.lproj/Localizable.strings
+  outputs:
+    templateName: structured-swift5
+    output: Strings.swift
+    params:
+      enumName: Strings
+
+fonts:
+  inputs: swift-control/Resources/Fonts
+  outputs:
+    templateName: swift5
+    output: Fonts.swift
+    params:
+      enumName: Fonts

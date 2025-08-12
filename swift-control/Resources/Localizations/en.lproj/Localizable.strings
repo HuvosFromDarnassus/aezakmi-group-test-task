@@ -1,0 +1,74 @@
+// MARK: - Common
+"common.continue" = "Continue";
+"common.cancel" = "Cancel";
+"common.tryAgain" = "Try again";
+
+// MARK: - Splash
+"splash.title" = "Smart Remote Control for LG";
+
+// MARK: - Onboarding
+"onboarding.title.first" = "Control your TV from your smartphone";
+"onboarding.subtitle.first" = "Turn on the TV, adjust the volume and navigate through apps with just one tap";
+"onboarding.title.second" = "We are constantly improving our app";
+"onboarding.subtitle.second" = "Do you like the app? Rate us — your feedback helps us develop the app";
+"onboarding.title.third" = "Launch your favorite TV services using the app";
+"onboarding.subtitle.third" = "Dive into the content you love — no need to waste time searching";
+"onboarding.review.first.title" = "Works perfectly with my LG TV!";
+"onboarding.review.first.dateAndName" = "2m ago • Emily R. ";
+"onboarding.review.first.text" = "Set up in seconds. Haven't touched my physical remote in weeks.";
+"onboarding.review.second.title" = "So convenient";
+"onboarding.review.second.dateAndName" = "3w ago • James K.";
+"onboarding.review.second.text" = "Lost my remote last month. This app saved me time on a replacement";
+"onboarding.review.third.title" = "No complaints";
+"onboarding.review.third.dateAndName" = "4m ago • Robert T.";
+"onboarding.review.third.text" = "Been using it daily for 4 months";
+
+// MARK: - Paywall
+"paywall.title" = "Get quick access to any service on TV";
+"paywall.subtitle" = "Subscribe to unlock all the features just for %@";
+"paywall.trial" = "Enable a 3 days free trial";
+"paywall.feature.first" = "Access to video services on TV";
+"paywall.feature.second" = "Access to the mute function";
+"paywall.terms" = "Terms of Use";
+"paywall.restore" = "Restore";
+"paywall.privacy" = "Privacy Policy";
+
+// MARK: - Main
+"main.statusBar.notSelected" = "Connect to TV";
+"main.statusBar.disconnected" = "Disconnected";
+"main.alert.permission.localNetwork.title" = "No access to the Local Network";
+"main.alert.permission.localNetwork.message" = "Please go to settings and allow access. This will let the app find and connect to your Smart TV";
+"main.alert.permission.localNetwork.action" = "Settings";
+
+// MARK: - Connection
+"connection.title" = "Connect to TV";
+"connection.subtitle" = "Make sure your TV is turned on and connected to the same Wi-Fi network";
+"connection.searching" = "Connected";
+"connection.status.connected" = "Searching...";
+"connection.status.connection" = "Connection...";
+"connection.status.disconnected" = "Not connected";
+"connection.status.error" = "Сonnection error. Try again";
+"connection.notFound" = "Your device not found?";
+"connection.pairing.title" = "Pairing with device ";
+"connection.pairing.subtitle" = "Enter the PIN displayed on your TV";
+"connection.pairing.error" = "The code was entered incorrectly";
+"connection.alert.disconnect.title" = "Disconnect from TV?";
+"connection.alert.disconnect.message" = "You can connect again by tapping on the device card";
+"connection.alert.disconnect.action" = "Disconnect";
+
+// MARK: - Settings
+"settings.title" = "Settings";
+"settings.instruction" = "Instruction";
+"settings.privacy" = "Privacy Policy";
+"settings.terms" = "Terms of Use";
+"settings.share" = "Share App";
+"settings.support" = "Support";
+
+// MARK: - Instruction
+"instruction.title" = "Instruction";
+"instruction.one" = "Connect your phone and TV to the same Wi-Fi network";
+"instruction.two" = "Allow access to the Local Network";
+"instruction.three" = "Find your TV in the list and select it";
+"instruction.four" = "Wait for connection";
+"instruction.five" = "All set! Your phone is now a TV remote";
+"instruction.six" = "Open your favorite services via your phone";
