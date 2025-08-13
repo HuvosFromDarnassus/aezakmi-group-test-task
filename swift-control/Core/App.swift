@@ -15,7 +15,7 @@ struct MainApp: App {
     var body: some Scene {
         WindowGroup {
             if hasSeenOnboarding {
-                Text("Onboarding completed")
+                MainTabView()
             } else {
                 OnboardingView(hasSeenOnboarding: $hasSeenOnboarding)
             }
