@@ -149,13 +149,23 @@ internal enum Strings {
     internal static let terms = Strings.tr("Localizable", "paywall.terms", fallback: "Terms of Use")
     /// Get quick access to any service on TV
     internal static let title = Strings.tr("Localizable", "paywall.title", fallback: "Get quick access to any service on TV")
-    /// Enable a 3 days free trial
-    internal static let trial = Strings.tr("Localizable", "paywall.trial", fallback: "Enable a 3 days free trial")
     internal enum Feature {
       /// Access to video services on TV
       internal static let first = Strings.tr("Localizable", "paywall.feature.first", fallback: "Access to video services on TV")
       /// Access to the mute function
       internal static let second = Strings.tr("Localizable", "paywall.feature.second", fallback: "Access to the mute function")
+    }
+    internal enum Subtitle {
+      /// Subscribe to unlock all the features just for %@ with a 3 days free trial
+      internal static func withTrial(_ p1: Any) -> String {
+        return Strings.tr("Localizable", "paywall.subtitle.withTrial", String(describing: p1), fallback: "Subscribe to unlock all the features just for %@ with a 3 days free trial")
+      }
+    }
+    internal enum Trial {
+      /// Enable a 3 days free trial
+      internal static let disabled = Strings.tr("Localizable", "paywall.trial.disabled", fallback: "Enable a 3 days free trial")
+      /// 3 days free trial enabled
+      internal static let enabled = Strings.tr("Localizable", "paywall.trial.enabled", fallback: "3 days free trial enabled")
     }
   }
   internal enum Settings {

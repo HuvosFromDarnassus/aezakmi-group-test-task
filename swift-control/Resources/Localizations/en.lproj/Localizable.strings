@@ -26,7 +26,9 @@
 // MARK: - Paywall
 "paywall.title" = "Get quick access to any service on TV";
 "paywall.subtitle" = "Subscribe to unlock all the features just for %@";
-"paywall.trial" = "Enable a 3 days free trial";
+"paywall.subtitle.withTrial" = "Subscribe to unlock all the features just for %@ with a 3 days free trial";
+"paywall.trial.disabled" = "Enable a 3 days free trial";
+"paywall.trial.enabled" = "3 days free trial enabled";
 "paywall.feature.first" = "Access to video services on TV";
 "paywall.feature.second" = "Access to the mute function";
 "paywall.terms" = "Terms of Use";
