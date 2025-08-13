@@ -9,15 +9,11 @@ import SwiftUI
 
 struct MainTabView: View {
     
-    @State private var selectedTab: Tab = .control
+    @State private var selectedTab: Tab = .settings
 
     var body: some View {
         ZStack {
-            Color(.backgroundPrimary)
-                .ignoresSafeArea()
-            
             contentView
-            
             TabBarView(selectedTab: $selectedTab)
         }
     }
@@ -29,8 +25,7 @@ struct MainTabView: View {
             Text("Control")
                 .foregroundStyle(.textAndIcons)
         case .settings:
-            Text("Settings")
-                .foregroundStyle(.textAndIcons)
+            SettingsView()
         }
     }
     

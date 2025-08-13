@@ -58,14 +58,18 @@ struct TabButton: View {
 }
 
 #Preview {
-    VStack {
-        ActionButton(title: "Continue") {
-            print("Tap")
-        }
-        
-        HStack {
-            TabButton(isSelected: true, icon: .init(.control), action: {})
-            TabButton(isSelected: false, icon: .init(.settings), action: {})
+    ZStack {
+        Color(.backgroundPrimary)
+            .ignoresSafeArea()
+        VStack {
+            ActionButton(title: "Continue") {
+                print("Tap")
+            }
+            
+            HStack {
+                TabButton(isSelected: true, icon: .init(.control), action: {})
+                TabButton(isSelected: false, icon: .init(.settings), action: {})
+            }
         }
     }
 }
