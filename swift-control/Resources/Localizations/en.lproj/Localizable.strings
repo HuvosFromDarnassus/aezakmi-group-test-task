@@ -45,8 +45,8 @@
 // MARK: - Connection
 "connection.title" = "Connect to TV";
 "connection.subtitle" = "Make sure your TV is turned on and connected to the same Wi-Fi network";
-"connection.searching" = "Connected";
-"connection.status.connected" = "Searching...";
+"connection.searching" = "Searching...";
+"connection.status.connected" = "Connected";
 "connection.status.connection" = "Connection...";
 "connection.status.disconnected" = "Not connected";
 "connection.status.error" = "Сonnection error. Try again";

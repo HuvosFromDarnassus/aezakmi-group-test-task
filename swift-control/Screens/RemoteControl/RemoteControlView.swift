@@ -13,6 +13,7 @@ struct RemoteControlView: View {
     
     @StateObject private var viewModel = RemoteControlViewModel()
     @State private var showNumpad = false
+    @State private var showConnectionSheet = false
     
     private enum Constants {
         enum Sizes {
@@ -34,6 +35,9 @@ struct RemoteControlView: View {
             
             VStack(spacing: 34) {
                 statusBar
+                    .onTapGesture {
+                        showConnectionSheet = true
+                    }
                 topButtons
                 if showNumpad {
                     numpad
@@ -61,6 +65,18 @@ struct RemoteControlView: View {
             .padding(.trailing, 26)
             .padding(.bottom, 28)
         }
+        .sheet(isPresented: $showConnectionSheet) {
+            showConnectionSheet = false
+        } content: {
+            ConnectionView()
+                .presentationDetents([.medium, .large, .fraction(0.6)])
+                .presentationDragIndicator(.visible)
+                .presentationBackground(.backgroundSecondary)
+                .presentationCornerRadius(20)
+                .presentationContentInteraction(.scrolls)
+                .presentationCompactAdaptation(.none)
+        }
+
     }
     
     // MARK: Private

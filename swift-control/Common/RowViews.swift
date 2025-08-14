@@ -32,10 +32,49 @@ struct SettingsRow: View {
         }
         .frame(height: 56)
         .cornerRadius(15)
-        .contentShape(Rectangle())
         .listRowBackground(Color.clear)
     }
 
+}
+
+struct ConnectionItemRow: View {
+    
+    // MARK: Properties
+    
+    // TODO: Use device and connection status models to configure row
+    let name: String
+    let backgroundColor: Color
+    let statusText: String
+    let statusTextColor: Color
+    
+    // MARK: Body
+    
+    var body: some View {
+        ZStack {
+            Color(backgroundColor)
+            HStack(spacing: 10) {
+                Image(.tvOpaque)
+                Text(name)
+                    .font(Fonts.Roboto.regular.swiftUIFont(fixedSize: 17))
+                    .foregroundStyle(.textAndIcons)
+                
+                Spacer()
+                
+                Text(statusText)
+                    .font(Fonts.Roboto.regular.swiftUIFont(fixedSize: 17))
+                    .foregroundStyle(statusTextColor)
+            }
+            .padding(16)
+        }
+        .frame(height: 56)
+        .cornerRadius(15)
+        .overlay(
+            RoundedRectangle(cornerRadius: 15)
+                .stroke(Color.black, lineWidth: 1)
+        )
+        .listRowBackground(Color.clear)
+    }
+    
 }
 
 // MARK: - Preview
@@ -43,5 +82,23 @@ struct SettingsRow: View {
 #Preview {
     List {
         SettingsRow(item: .instruction)
+        ConnectionItemRow(
+            name: "Smart TV name",
+            backgroundColor: .backgroundSecondary,
+            statusText: "Not connected",
+            statusTextColor: .textAndIcons.opacity(0.5)
+        )
+        ConnectionItemRow(
+            name: "Smart TV name",
+            backgroundColor: .accentPrimary,
+            statusText: "Connected",
+            statusTextColor: .textAndIcons
+        )
+        ConnectionItemRow(
+            name: "Smart TV name",
+            backgroundColor: .backgroundSecondary,
+            statusText: "Disconnected",
+            statusTextColor: .accentPrimary
+        )
     }
 }
