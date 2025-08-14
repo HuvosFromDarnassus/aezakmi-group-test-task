@@ -9,21 +9,26 @@ import SwiftUI
 
 struct MainTabView: View {
     
-    @State private var selectedTab: Tab = .settings
+    // MARK: Properties
+    
+    @State private var selectedTab: Tab = .control
 
+    // MARK: Body
+    
     var body: some View {
         ZStack {
             contentView
             TabBarView(selectedTab: $selectedTab)
         }
     }
+    
+    // MARK: Private
 
     @ViewBuilder
     private var contentView: some View {
         switch selectedTab {
         case .control:
-            Text("Control")
-                .foregroundStyle(.textAndIcons)
+            RemoteControlView()
         case .settings:
             SettingsView()
         }
@@ -33,7 +38,11 @@ struct MainTabView: View {
 
 fileprivate struct TabBarView: View {
     
+    // MARK: Properties
+    
     @Binding var selectedTab: Tab
+    
+    // MARK: Body
     
     var body: some View {
         VStack {

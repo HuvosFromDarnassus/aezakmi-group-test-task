@@ -9,8 +9,12 @@ import SwiftUI
 
 struct SettingsView: View {
     
+    // MARK: Properties
+    
     @State private var selection: SettingsItem? = nil
     @State private var showShareSheet = false
+    
+    // MARK: Body
 
     var body: some View {
         NavigationStack {
@@ -57,6 +61,8 @@ struct SettingsView: View {
     }
 
 }
+
+// MARK: - Preview
 
 #Preview {
     SettingsView()

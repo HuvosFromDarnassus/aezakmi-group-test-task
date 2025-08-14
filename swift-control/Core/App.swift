@@ -10,7 +10,11 @@ import SwiftUI
 @main
 struct MainApp: App {
     
+    // MARK: Properties
+    
     @AppStorage("hasSeenOnboarding") private var hasSeenOnboarding: Bool = false
+    
+    // MARK: Body
 
     var body: some Scene {
         WindowGroup {
