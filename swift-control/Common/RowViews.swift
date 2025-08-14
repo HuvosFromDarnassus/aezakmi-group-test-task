@@ -8,8 +8,12 @@
 import SwiftUI
 
 struct SettingsRow: View {
+    
+    // MARK: Properties
 
     let item: SettingsItem
+    
+    // MARK: Body
     
     var body: some View {
         ZStack {
@@ -33,6 +37,8 @@ struct SettingsRow: View {
     }
 
 }
+
+// MARK: - Preview
 
 #Preview {
     List {

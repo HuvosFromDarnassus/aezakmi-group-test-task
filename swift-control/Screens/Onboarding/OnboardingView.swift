@@ -9,11 +9,15 @@ import SwiftUI
 
 struct OnboardingView: View {
     
+    // MARK: Properties
+    
     @Binding var hasSeenOnboarding: Bool
     @StateObject private var viewModel = OnboardingViewModel()
     @State private var showWebView = false
     @State private var urlToOpen: URL?
     @State private var showPaywall = false
+    
+    // MARK: Body
     
     var body: some View {
         ZStack {
@@ -84,6 +88,8 @@ struct OnboardingView: View {
     }
     
 }
+
+// MARK: - Preview
 
 #Preview {
     OnboardingView(hasSeenOnboarding: .constant(false))

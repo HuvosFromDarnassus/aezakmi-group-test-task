@@ -8,15 +8,18 @@
 import SwiftUI
 
 struct PaywallView: View {
+
+    // MARK: Properties
     
     @Binding var hasSeenOnboarding: Bool
     var onClose: (() -> Void)?
-    
     @State private var showWebView = false
     @State private var urlToOpen: URL?
     @State private var trialEnabled = false
     @State private var isLoading = false
     private let mockPrice: String = "$4.99/week"
+    
+    // MARK: Body
 
     var body: some View {
         ZStack {
@@ -123,6 +126,8 @@ struct PaywallView: View {
     }
 
 }
+
+// MARK: - Preview
 
 #Preview {
     PaywallView(hasSeenOnboarding: .constant(false))
