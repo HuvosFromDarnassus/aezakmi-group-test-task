@@ -9,8 +9,12 @@ import SwiftUI
 
 struct ActionButton: View {
     
+    // MARK: Properties
+    
     let title: String
     let action: () -> Void
+    
+    // MARK: Body
     
     var body: some View {
         Button(action: action) {
@@ -27,10 +31,14 @@ struct ActionButton: View {
 }
 
 struct TabButton: View {
+    
+    // MARK: Properties
 
     let isSelected: Bool
     let icon: Image
     let action: () -> Void
+    
+    // MARK: Body
     
     var body: some View {
         Button(action: action) {
@@ -58,6 +66,8 @@ struct TabButton: View {
 }
 
 struct RemoteSquareButton: View {
+    
+    // MARK: Properties
 
     let label: String
     let icon: String
@@ -65,6 +75,8 @@ struct RemoteSquareButton: View {
     let isAccent: Bool
     let action: () -> Void
     @State private var isPressed = false
+    
+    // MARK: Initilizers
     
     init(
         label: String,
@@ -81,6 +93,8 @@ struct RemoteSquareButton: View {
         self.action = action
         self.isPressed = isPressed
     }
+    
+    // MARK: Body
     
     var body: some View {
         Button(action: action) {
@@ -117,6 +131,8 @@ struct RemoteSquareButton: View {
 
 struct RemoteRectangleButton: View {
     
+    // MARK: Properties
+    
     let width: CGFloat
     let height: CGFloat
     let topIcon: String
@@ -126,6 +142,8 @@ struct RemoteRectangleButton: View {
     let topAction: () -> Void
     let bottomAction: () -> Void
     @State private var isPressed = false
+    
+    // MARK: Body
     
     var body: some View {
         ZStack {
@@ -168,6 +186,8 @@ struct RemoteRectangleButton: View {
     }
     
 }
+
+// MARK: - Preview
 
 #Preview {
     ZStack {

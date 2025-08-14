@@ -8,12 +8,11 @@
 import SwiftUI
 
 struct PaywallView: View {
+
+    // MARK: Properties
     
     @Binding var hasSeenOnboarding: Bool
     var onClose: (() -> Void)?
-    
-    // MARK: Properties
-    
     @State private var showWebView = false
     @State private var urlToOpen: URL?
     @State private var trialEnabled = false

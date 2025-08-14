@@ -22,18 +22,29 @@ enum RemoteControlViewData: CaseIterable {
     case volume
     case volumeUp
     case volumeDown
-    
     /// D-pad
     case up
     case down
     case left
     case right
     case ok
+    /// Numpad
+    case one
+    case two
+    case three
+    case four
+    case five
+    case six
+    case seven
+    case eight
+    case nine
+    case zero
+    case list
 
 }
 
 struct RemoteButtonConfig: Identifiable {
-
+    
     let id = UUID()
     let isRectangular: Bool
     let label: String

@@ -72,6 +72,8 @@ fileprivate enum Tab: CaseIterable {
 
 }
 
+// MARK: - Preview
+
 #Preview {
     MainTabView()
 }

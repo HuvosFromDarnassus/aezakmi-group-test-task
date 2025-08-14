@@ -8,9 +8,13 @@
 import SwiftUI
 
 struct BackgroundGradient: View {
+    
+    // MARK: Properties
 
     let cornerRadius: CGFloat
     let colors: [Color]
+    
+    // MARK: Body
     
     var body: some View {
         RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
@@ -39,6 +43,8 @@ struct BackgroundGradient: View {
     }
 
 }
+
+// MARK: - Preview
 
 #Preview {
     BackgroundGradient(

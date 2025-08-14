@@ -8,6 +8,8 @@
 import SwiftUI
 
 struct LoadingOverlay: View {
+    
+    // MARK: Body
 
     var body: some View {
         ZStack {
