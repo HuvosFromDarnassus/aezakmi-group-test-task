@@ -66,7 +66,7 @@ struct ConnectionView: View {
                 message: Text(alert.message),
                 primaryButton: .cancel(),
                 secondaryButton: .default(
-                    Text(alert.actionTitle),
+                    Text(alert.actionTitle ?? ""),
                     action: alert.action
                 )
             )

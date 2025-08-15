@@ -8,6 +8,8 @@
 import SwiftUI
 import Combine
 
+import WebOSClient
+
 @Observable
 @MainActor
 final class RemoteControlViewModel: ObservableObject {
@@ -46,78 +48,56 @@ final class RemoteControlViewModel: ObservableObject {
          RemoteButtonConfig(label: "9", icon: "",                       type: .nine),
          RemoteButtonConfig(label: "OK", icon: "",                      type: .ok)]
     ]
+    var alertViewData: AlertViewData?
     
     private var cancellables = Set<AnyCancellable>()
+    private let tvEmulatorURL = URL(string: "ws://192.168.100.68:3001")
+    private var tvToken: String?
+    private var tvClient: WebOSClientProtocol?
     
     // MARK: Initializers
     
     init() {
         setupBindings()
+        setupTvClient()
     }
     
     // MARK: Events
     
     func didTapButton(_ button: RemoteControlViewData) {
+        guard let tvClient else { return }
         switch button {
         /// Top buttons
-        case .channel:
-            print("TAP channel")
-        case .nextChannel:
-            print("TAP nextChannel")
-        case .previousChannel:
-            print("TAP previousChannel")
-        case .power:
-            print("TAP power")
-        case .menu:
-            print("TAP menu")
-        case .home:
-            print("TAP home")
-        case .mute:
-            print("TAP mute")
-        case .back:
-            print("TAP back")
-        case .enter:
-            print("TAP enter")
-        case .volume:
-            print("TAP volume")
-        case .volumeUp:
-            print("TAP volumeUp")
-        case .volumeDown:
-            print("TAP volumeDown")
+        case .nextChannel:      tvClient.sendKey(.channelUp)
+        case .previousChannel:  tvClient.sendKey(.channelDown)
+        case .power:            tvClient.send(.turnOff)
+        case .menu:             tvClient.send(.listApps)
+        case .home:             tvClient.sendKey(.home)
+        case .mute:             tvClient.sendKey(.mute)
+        case .back:             tvClient.sendKey(.back)
+        case .enter:            tvClient.sendKey(.enter)
+        case .volumeUp:         tvClient.sendKey(.volumeUp)
+        case .volumeDown:       tvClient.sendKey(.volumeDown)
         /// D-pad
-        case .up:
-            print("TAP up")
-        case .down:
-            print("TAP down")
-        case .left:
-            print("TAP left")
-        case .right:
-            print("TAP right")
-        case .ok:
-            print("TAP ok")
+        case .up:               tvClient.sendKey(.up)
+        case .down:             tvClient.sendKey(.down)
+        case .left:             tvClient.sendKey(.left)
+        case .right:            tvClient.sendKey(.right)
+        case .ok:               tvClient.sendKey(.enter)
         /// Numpad
-        case .one:
-            print("TAP one")
-        case .two:
-            print("TAP two")
-        case .three:
-            print("TAP three")
-        case .four:
-            print("TAP four")
-        case .five:
-            print("TAP five")
-        case .six:
-            print("TAP six")
-        case .seven:
-            print("TAP seven")
-        case .eight:
-            print("TAP eight")
-        case .nine:
-            print("TAP nine")
-        case .zero:
-            print("TAP zero")
-        case .list:
-            print("TAP list")
+        case .one:              tvClient.sendKey(.num1)
+        case .two:              tvClient.sendKey(.num2)
+        case .three:            tvClient.sendKey(.num3)
+        case .four:             tvClient.sendKey(.num4)
+        case .five:             tvClient.sendKey(.num5)
+        case .six:              tvClient.sendKey(.num6)
+        case .seven:            tvClient.sendKey(.num7)
+        case .eight:            tvClient.sendKey(.num8)
+        case .nine:             tvClient.sendKey(.num9)
+        case .zero:             tvClient.sendKey(.num0)
+        case .list:             tvClient.send(.listSources)
+        default:
+            break
         }
     }
     
@@ -135,6 +115,36 @@ final class RemoteControlViewModel: ObservableObject {
                 }
             }
             .store(in: &cancellables)
+    }
+    
+    private func setupTvClient() {
+        tvClient = WebOSClient(url: tvEmulatorURL!, delegate: self, shouldLogActivity: true)
+        tvClient?.connect()
+        tvClient?.send(.register(pairingType: .pin, clientKey: tvToken))
+    }
+    
+}
+
+// MARK: - WebOSClientDelegate
+
+extension RemoteControlViewModel: WebOSClientDelegate {
+
+    func didRegister(with clientKey: String) {
+        Task { @MainActor in
+            tvToken = clientKey
+        }
+    }
+    
+    func didReceiveNetworkError(_ error: (any Error)?) {
+        guard let error else { return }
+        Task { @MainActor in
+            alertViewData = AlertViewData(
+                title: "Error",
+                message: error.localizedDescription,
+                actionTitle: nil,
+                action: nil
+            )
+        }
     }
     
 }

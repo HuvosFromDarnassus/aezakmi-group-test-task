@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		F30D938F2E4ECBEB000D9855 /* Lottie in Frameworks */ = {isa = PBXBuildFile; productRef = F30D938E2E4ECBEB000D9855 /* Lottie */; };
+		F30D95E02E4FA45D000D9855 /* WebOSClient in Frameworks */ = {isa = PBXBuildFile; productRef = F30D95DF2E4FA45D000D9855 /* WebOSClient */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -40,6 +41,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F30D95E02E4FA45D000D9855 /* WebOSClient in Frameworks */,
 				F30D938F2E4ECBEB000D9855 /* Lottie in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -86,6 +88,7 @@
 			name = "swift-control";
 			packageProductDependencies = (
 				F30D938E2E4ECBEB000D9855 /* Lottie */,
+				F30D95DF2E4FA45D000D9855 /* WebOSClient */,
 			);
 			productName = "swift-control";
 			productReference = F35043F82E4B6382008DBEFD /* swift-control.app */;
@@ -117,6 +120,7 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				F30D938D2E4ECBEB000D9855 /* XCRemoteSwiftPackageReference "lottie-ios" */,
+				F30D95DE2E4FA45D000D9855 /* XCRemoteSwiftPackageReference "WebOSClient" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = F35043F92E4B6382008DBEFD /* Products */;
@@ -417,6 +421,14 @@
 				minimumVersion = 4.5.2;
 			};
 		};
+		F30D95DE2E4FA45D000D9855 /* XCRemoteSwiftPackageReference "WebOSClient" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/jareksedy/WebOSClient";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.5.1;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -424,6 +436,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = F30D938D2E4ECBEB000D9855 /* XCRemoteSwiftPackageReference "lottie-ios" */;
 			productName = Lottie;
+		};
+		F30D95DF2E4FA45D000D9855 /* WebOSClient */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = F30D95DE2E4FA45D000D9855 /* XCRemoteSwiftPackageReference "WebOSClient" */;
+			productName = WebOSClient;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
