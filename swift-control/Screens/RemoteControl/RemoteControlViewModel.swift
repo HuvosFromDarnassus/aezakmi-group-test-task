@@ -52,17 +52,7 @@ final class RemoteControlViewModel: ObservableObject {
     // MARK: Initializers
     
     init() {
-        DeviceManager.shared.deviceConnectionFinished
-            .sink { [weak self] result, _ in
-                switch result {
-                case .success(let device):
-                    guard let device else { return }
-                    self?.connectionStatus = device.status
-                case .failure:
-                    break
-                }
-            }
-            .store(in: &cancellables)
+        setupBindings()
     }
     
     // MARK: Events
@@ -129,6 +119,22 @@ final class RemoteControlViewModel: ObservableObject {
         case .list:
             print("TAP list")
         }
+    }
+    
+    // MARK: Private
+    
+    private func setupBindings() {
+        DeviceManager.shared.deviceConnectionFinished
+            .sink { [weak self] result, _ in
+                switch result {
+                case .success(let device):
+                    guard let device else { return }
+                    self?.connectionStatus = device.status
+                case .failure:
+                    break
+                }
+            }
+            .store(in: &cancellables)
     }
     
 }
