@@ -17,12 +17,14 @@ struct RemoteControlView: View {
     
     private enum Constants {
         enum Sizes {
+            static let isSmallScreen = UIScreen.main.nativeBounds.height <= 1334 /// iPhone SE 3 screen size
             static let statusBarHeight: CGFloat = 50
             static let sqButton: CGFloat = 70
             static let numpadButton: CGFloat = 48
             static let recButtonWidth: CGFloat = 84
             static let recButtonHegiht: CGFloat = 232
-            static let dPadSize: CGFloat = UIScreen.main.bounds.width - 102
+            static let dPadRedius: CGFloat = isSmallScreen ? 280 : 300
+            static let dPadOkButtonSize: CGFloat = isSmallScreen ? 130 : 150
         }
     }
     
@@ -33,7 +35,7 @@ struct RemoteControlView: View {
             Color(.backgroundPrimary)
                 .ignoresSafeArea()
             
-            VStack(spacing: 34) {
+            VStack(spacing: Constants.Sizes.isSmallScreen ? 10 : 34) {
                 statusBar
                     .onTapGesture {
                         showConnectionSheet = true
@@ -49,24 +51,11 @@ struct RemoteControlView: View {
                         .transition(.move(edge: .bottom).combined(with: .opacity))
                 }
                 
-                Spacer()
+                Spacer(minLength: Constants.Sizes.isSmallScreen ? .infinity : .zero)
             }
             .animation(.easeInOut(duration: 0.2), value: showNumpad)
             
-            VStack {
-                HStack {
-                    Spacer()
-                    RemoteSquareButton(
-                        label: showNumpad ? "" : "123",
-                        icon: showNumpad ? "arrows-from-center" : "",
-                        size: Constants.Sizes.numpadButton
-                    ) {
-                        showNumpad.toggle()
-                    }
-                }
-            }
-            .padding(.trailing, 26)
-            .padding(.bottom, 28)
+            dPadNumpadButton
         }
         .sheet(isPresented: $showConnectionSheet) {
             showConnectionSheet = false
@@ -87,6 +76,7 @@ struct RemoteControlView: View {
     private var statusBar: some View {
         ZStack {
             BackgroundGradient(
+                shape: .rect,
                 cornerRadius: 16,
                 colors: [viewModel.connectionStatus.statusBarBackgroundColor]
             )
@@ -112,7 +102,7 @@ struct RemoteControlView: View {
                             if config.isRectangular {
                                 defineRectangularButton(by: config)
                             } else {
-                                RemoteSquareButton(
+                                SquareButton(
                                     label: config.label,
                                     icon: config.icon,
                                     size: Constants.Sizes.sqButton
@@ -131,7 +121,7 @@ struct RemoteControlView: View {
     private func defineRectangularButton(by config: RemoteButtonConfig) -> some View {
         switch config.type {
         case .channel:
-            RemoteRectangleButton(
+            RectangleButton(
                 width: Constants.Sizes.recButtonWidth,
                 height: Constants.Sizes.recButtonHegiht,
                 topIcon: "chevron-up",
@@ -146,7 +136,7 @@ struct RemoteControlView: View {
                 }
             )
         case .volume:
-            RemoteRectangleButton(
+            RectangleButton(
                 width: Constants.Sizes.recButtonWidth,
                 height: Constants.Sizes.recButtonHegiht,
                 topIcon: "plus",
@@ -168,24 +158,22 @@ struct RemoteControlView: View {
     @ViewBuilder
     private var dPad: some View {
         ZStack {
-            ForEach(viewModel.dPadGrid.compactMap { $0 }, id: \.type) { config in
-                let pad = Constants.Sizes.dPadSize
-                let isCenter = (config.type == .ok)
-                let side: CGFloat = pad * (isCenter ? 0.25 : 0.3)
-
-                RemoteSquareButton(
-                    label: config.label,
-                    icon: config.icon,
-                    size: side,
-                    isAccent: true
-                ) {
-                    viewModel.didTapButton(config.type)
-                }
-                .frame(width: side, height: side)
-                .offset(offset(for: config.type, pad: pad))
+            SemicircleButton(label: "", icon: "chevron-up", radius: Constants.Sizes.dPadRedius, isAccent: true, orientation: .top) {
+                viewModel.didTapButton(.up)
+            }
+            SemicircleButton(label: "", icon: "chevron-right", radius: Constants.Sizes.dPadRedius, isAccent: true, orientation: .right) {
+                viewModel.didTapButton(.right)
+            }
+            CircleButtom(label: "OK", icon: "", size: Constants.Sizes.dPadOkButtonSize, isAccent: true) {
+                viewModel.didTapButton(.ok)
+            }
+            SemicircleButton(label: "", icon: "chevron-down", radius: Constants.Sizes.dPadRedius, isAccent: true, orientation: .bottom) {
+                viewModel.didTapButton(.down)
+            }
+            SemicircleButton(label: "", icon: "chevron-left", radius: Constants.Sizes.dPadRedius, isAccent: true, orientation: .left) {
+                viewModel.didTapButton(.left)
             }
         }
-        .frame(width: Constants.Sizes.dPadSize, height: Constants.Sizes.dPadSize)
     }
     
     @ViewBuilder
@@ -195,7 +183,7 @@ struct RemoteControlView: View {
                 VStack(spacing: 8) {
                     ForEach(viewModel.numpadGrid[column].indices, id: \.self) { row in
                         if let config = viewModel.numpadGrid[column][row] {
-                            RemoteSquareButton(
+                            SquareButton(
                                 label: config.label,
                                 icon: config.icon,
                                 size: Constants.Sizes.sqButton
@@ -207,6 +195,24 @@ struct RemoteControlView: View {
                 }
             }
         }
+    }
+    
+    @ViewBuilder
+    private var dPadNumpadButton: some View {
+        VStack {
+            HStack {
+                Spacer()
+                SquareButton(
+                    label: showNumpad ? "" : "123",
+                    icon: showNumpad ? "arrows-from-center" : "",
+                    size: Constants.Sizes.numpadButton
+                ) {
+                    showNumpad.toggle()
+                }
+            }
+        }
+        .padding(.trailing, 25)
+        .padding(.bottom, 15)
     }
 
     private func offset(for type: RemoteControlViewData, pad: CGFloat) -> CGSize {
