@@ -6,8 +6,10 @@
 //
 
 import SwiftUI
+import Combine
 
 @Observable
+@MainActor
 final class RemoteControlViewModel: ObservableObject {
     
     // MARK: Properties
@@ -44,6 +46,24 @@ final class RemoteControlViewModel: ObservableObject {
          RemoteButtonConfig(label: "9", icon: "",                       type: .nine),
          RemoteButtonConfig(label: "OK", icon: "",                      type: .ok)]
     ]
+    
+    private var cancellables = Set<AnyCancellable>()
+    
+    // MARK: Initializers
+    
+    init() {
+        DeviceManager.shared.deviceConnectionFinished
+            .sink { [weak self] result, _ in
+                switch result {
+                case .success(let device):
+                    guard let device else { return }
+                    self?.connectionStatus = device.status
+                case .failure:
+                    break
+                }
+            }
+            .store(in: &cancellables)
+    }
     
     // MARK: Events
     

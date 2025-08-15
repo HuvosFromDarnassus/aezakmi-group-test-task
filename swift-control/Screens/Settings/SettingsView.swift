@@ -27,26 +27,7 @@ struct SettingsView: View {
                         .font(Fonts.Roboto.semiBold.swiftUIFont(fixedSize: 20))
                         .foregroundStyle(.textAndIcons)
                     
-                    List(SettingsItem.allCases, id: \.self) { item in
-                        SettingsRow(item: item)
-                            .listRowSeparator(.hidden)
-                            .listRowInsets(EdgeInsets(top: 0, leading: 16, bottom: 8, trailing: 16))
-                            .onTapGesture {
-                                switch item {
-                                case .share:
-                                    showShareSheet = true
-                                default:
-                                    selection = item
-                                }
-                            }
-                    }
-                    .listStyle(.plain)
-                    .navigationDestination(for: SettingsItem.self) { item in
-                        item.destination
-                    }
-                    .popover(isPresented: $showShareSheet, arrowEdge: .bottom) {
-                        ActivityView(activityItems: [URL(string: "https://www.google.com")!])
-                    }
+                    settingsItems
                 }
                 .navigationDestination(isPresented: Binding(
                     get: { selection != nil },
@@ -57,6 +38,32 @@ struct SettingsView: View {
                     }
                 }
             }
+        }
+    }
+    
+    // MARK: Private
+    
+    @ViewBuilder
+    private var settingsItems: some View {
+        List(SettingsItem.allCases, id: \.self) { item in
+            SettingsRow(item: item)
+                .listRowSeparator(.hidden)
+                .listRowInsets(EdgeInsets(top: 0, leading: 16, bottom: 8, trailing: 16))
+                .onTapGesture {
+                    switch item {
+                    case .share:
+                        showShareSheet = true
+                    default:
+                        selection = item
+                    }
+                }
+        }
+        .listStyle(.plain)
+        .navigationDestination(for: SettingsItem.self) { item in
+            item.destination
+        }
+        .popover(isPresented: $showShareSheet, arrowEdge: .bottom) {
+            ActivityView(activityItems: [URL(string: "https://www.google.com")!])
         }
     }
 

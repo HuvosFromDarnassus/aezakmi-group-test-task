@@ -6,10 +6,12 @@
 //
 
 import SwiftUI
+import Combine
 
 import Lottie
 
 @Observable
+@MainActor
 final class ConnectionViewModel: ObservableObject {
     
     // MARK: Properties
@@ -20,8 +22,12 @@ final class ConnectionViewModel: ObservableObject {
         }
     }
     var isSearching = true
-
+    var showPinView = false
+    var errorMessage: String?
+    var alertViewData: AlertViewData?
+    
     private let animationLoader: AnimationLoader
+    private var cancellables = Set<AnyCancellable>()
     
     // MARK: Initializers
     
@@ -29,7 +35,41 @@ final class ConnectionViewModel: ObservableObject {
         animationLoader: AnimationLoader = AnimationLoader()
     ) {
         self.animationLoader = animationLoader
-        DeviceManager.shared.delegate = self
+        
+        DeviceManager.shared.deviceRequestedPin
+            .sink { [weak self] in
+                self?.showPinView = true
+                self?.errorMessage = nil
+            }
+            .store(in: &cancellables)
+        
+        DeviceManager.shared.deviceConnectionFinished
+            .sink { [weak self] result, updatedList in
+                guard let self else { return }
+                devices = updatedList
+                switch result {
+                case .success:
+                    showPinView = false
+                    errorMessage = nil
+                case .failure(let error):
+                    errorMessage = error.description
+                }
+            }
+            .store(in: &cancellables)
+        
+        DeviceManager.shared.selectedDeviceConnected
+            .sink { [weak self] in
+                self?.alertViewData = AlertViewData(
+                    title: "Disconnect from TV?",
+                    message: "You can connect again by tapping on the device card",
+                    actionTitle: "Disconnect"
+                ) {
+                    Task {
+                        await DeviceManager.shared.disconnect()
+                    }
+                }
+            }
+            .store(in: &cancellables)
     }
     
     // MARK: Events
@@ -61,24 +101,5 @@ final class ConnectionViewModel: ObservableObject {
     func getSearchAnimation() -> LottieAnimation? {
         animationLoader.load(animation: .searchingTV)
     }
-    
-}
-
-// MARK: - DeviceManagerDelegate
-
-extension ConnectionViewModel: DeviceManagerDelegate {
-    
-    func deviceRequestedPin() {
-        // TODO: Show pin sheet
-    }
-    
-    func deviceConnectionFailed(with error: ConnectionError) {
-        // TODO: Change device cell apperiance
-    }
-    
-    func deviceListUpdated(updatedList: [MockDevice]) {
-        devices = updatedList
-    }
-    
     
 }

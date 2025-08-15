@@ -6,25 +6,21 @@
 //
 
 import Foundation
+import Combine
 
-protocol DeviceManagerDelegate: AnyObject {
-    
-    func deviceRequestedPin()
-    func deviceConnectionFailed(with error: ConnectionError)
-    func deviceListUpdated(updatedList: [MockDevice])
-    
-}
-
-/// This service emulates the work of searching, connecting, requesting a PIN code
-/// and disconnecting from a SmartTV device.
+@MainActor
 final class DeviceManager {
     
     // MARK: Properties
     
-    static var shared: DeviceManager = DeviceManager()
-    var currentDevice: MockDevice?
-    weak var delegate: DeviceManagerDelegate?
+    static let shared = DeviceManager()
     
+    /// Publishers
+    let deviceRequestedPin = PassthroughSubject<Void, Never>()
+    let selectedDeviceConnected = PassthroughSubject<Void, Never>()
+    let deviceConnectionFinished = PassthroughSubject<(Result<MockDevice?, ConnectionError>, [MockDevice]), Never>()
+    /// State
+    private(set) var currentDevice: MockDevice?
     private var devices: [MockDevice] = []
     private var requestedDevice: MockDevice?
     
@@ -35,73 +31,84 @@ final class DeviceManager {
     // MARK: Events
     
     func getDevices() async -> [MockDevice] {
-        try? await Task.sleep(for: .seconds(3)) // network emulating
+        try? await Task.sleep(for: .seconds(3.5)) // network simulation
         
-        devices = [
-            .init(id: UUID().uuidString, name: "Mock Device 1", status: .empty, pin: "12345678"),
-            .init(id: UUID().uuidString, name: "Mock Device 2", status: .empty, pin: "56789879"),
-            .init(id: UUID().uuidString, name: "Mock Device 3", status: .empty, pin: "58724566"),
-            .init(id: UUID().uuidString, name: "Mock Device 4", status: .empty, pin: "91783211"),
-            .init(id: UUID().uuidString, name: "Mock Device 5", status: .empty, pin: "35781231")
-        ]
+        if devices.isEmpty {
+            devices = [
+                .init(id: UUID().uuidString, name: "Mock Device 1", status: .empty, pin: "123456"),
+                .init(id: UUID().uuidString, name: "Mock Device 2", status: .empty, pin: "567898"),
+                .init(id: UUID().uuidString, name: "Mock Device 3", status: .empty, pin: "587245"),
+                .init(id: UUID().uuidString, name: "Mock Device 4", status: .empty, pin: "917832"),
+                .init(id: UUID().uuidString, name: "Mock Device 5", status: .empty, pin: "357812")
+            ]
+        }
         
         return devices
     }
     
     func connect(toDeviceWith id: String) async {
         guard let index = devices.firstIndex(where: { id == $0.id }) else {
-            delegate?.deviceConnectionFailed(with: .unknown)
+            deviceConnectionFinished.send((.failure(.unknown), devices))
             return
         }
         
-        try? await Task.sleep(for: .seconds(5)) // network emulating
-        
-        await disconnect()
-        requestedDevice = devices[index]
-        update(status: .connection, of: requestedDevice)
-        
-        delegate?.deviceRequestedPin()
+        switch devices[index].status {
+        case .connected:
+            selectedDeviceConnected.send()
+        default:
+            requestedDevice = devices[index]
+            await update(status: .connection, of: requestedDevice)
+            deviceConnectionFinished.send((.success(nil), devices))
+            
+            try? await Task.sleep(for: .seconds(2)) // network simulation
+            
+            deviceRequestedPin.send()
+        }
     }
     
     func set(pin: String) async {
-        try? await Task.sleep(for: .seconds(5)) // network emulating
+        try? await Task.sleep(for: .seconds(2)) // network simulation
         
         if let requestedDevice, requestedDevice.pin == pin {
-            update(status: .connected(deviceName: ""), of: requestedDevice)
+            await disconnect()
+            await update(status: .connected(deviceName: requestedDevice.name), of: requestedDevice)
+            let requestedDevice = devices.first(where: { $0.id == requestedDevice.id })
             currentDevice = requestedDevice
+            deviceConnectionFinished.send((.success(currentDevice), devices))
+            self.requestedDevice = nil
         } else {
-            delegate?.deviceConnectionFailed(with: .invalidPIN)
-            update(status: .empty, of: requestedDevice)
+            await update(status: .empty, of: requestedDevice)
+            deviceConnectionFinished.send((.failure(.invalidPIN), devices))
         }
-        
-        requestedDevice = nil
     }
     
     func disconnect() async {
         guard let currentDevice else {
-            delegate?.deviceConnectionFailed(with: .unknown)
+            deviceConnectionFinished.send((.failure(.unknown), devices))
             return
         }
         
-        update(status: .disconnected, of: currentDevice)
+        await update(status: .disconnected, of: currentDevice)
+        let updatedCurrentDevice = devices.first(where: { $0.id == currentDevice.id })
+        deviceConnectionFinished.send((.success(updatedCurrentDevice), devices))
         
         self.currentDevice = nil
     }
     
     // MARK: Private
-    
-    private func update(status: ConnectionStatus, of device: MockDevice?) {
+
+    private func update(status: ConnectionStatus, of device: MockDevice?) async {
         guard
             let device,
             let index = devices.firstIndex(where: { device.id == $0.id })
         else {
-            delegate?.deviceConnectionFailed(with: .unknown)
+            deviceConnectionFinished.send((.failure(.unknown), devices))
             return
         }
         
         devices[index].status = status
     }
-    
+
 }
 
 enum ConnectionError: Error {

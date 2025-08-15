@@ -28,82 +28,15 @@ struct PaywallView: View {
                 .scaledToFill()
                 .ignoresSafeArea()
             
-            VStack {
-                HStack {
-                    Spacer()
-                    Button {
-                        onClose?()
-                    } label: {
-                        Image(.close)
-                            .resizable()
-                            .scaledToFill()
-                            .frame(width: 24, height: 24)
-                            .background(.textAndIcons.opacity(0.2))
-                            .clipShape(Circle())
-                    }
-                    .frame(width: 56, height: 56)
-                    .padding(.top, 52)
-                }
-                Spacer()
-            }
+            closeButton
             
             VStack(alignment: .leading, spacing: 16) {
                 Spacer()
                     .frame(height: UIScreen.main.bounds.height / 1.8)
 
-                Text(Strings.Paywall.title)
-                    .font(Fonts.Roboto.regular.swiftUIFont(fixedSize: 28))
-                    .foregroundColor(.textAndIcons)
-
-                Text(trialEnabled ? Strings.Paywall.Subtitle.withTrial(mockPrice) : Strings.Paywall.subtitle(mockPrice))
-                    .font(Fonts.Roboto.regular.swiftUIFont(fixedSize: 17))
-                    .foregroundColor(.textAndIcons.opacity(0.5))
-                    .animation(.easeInOut, value: trialEnabled)
-                
-                Toggle(isOn: $trialEnabled) {
-                    Text(trialEnabled ? Strings.Paywall.Trial.enabled : Strings.Paywall.Trial.disabled)
-                        .font(Fonts.Roboto.regular.swiftUIFont(fixedSize: 17))
-                        .foregroundColor(.textAndIcons.opacity(0.5))
-                        .animation(.easeInOut, value: trialEnabled)
-                }
-                .padding(.horizontal, 16)
-                .frame(height: 56)
-                .background(.textAndIcons.opacity(0.15))
-                .cornerRadius(15)
-                
-                ActionButton(title: Strings.Common.continue) {
-                    isLoading = true
-                    Task {
-                        try await Task.sleep(for: .seconds(2))
-                        isLoading = false
-                        hasSeenOnboarding = true
-                    }
-                }
-                .padding(.bottom, 16)
-                
-                HStack {
-                    Button(Strings.Paywall.terms) {
-                        urlToOpen = URL(string: "https://www.google.com")
-                        showWebView = true
-                    }
-                    Spacer()
-                    Button(Strings.Paywall.restore) {
-                        isLoading = true
-                        Task {
-                            try await Task.sleep(for: .seconds(2))
-                            isLoading = false
-                            hasSeenOnboarding = true
-                        }
-                    }
-                    Spacer()
-                    Button(Strings.Paywall.privacy) {
-                        urlToOpen = URL(string: "https://www.google.com")
-                        showWebView = true
-                    }
-                }
-                .font(Fonts.Roboto.regular.swiftUIFont(fixedSize: 12))
-                .foregroundColor(.textAndIcons.opacity(0.5))
-                .padding(.horizontal, 16)
+                textAndToggle
+                actionButton
+                bottomButtons
 
                 Spacer(minLength: 0)
             }
@@ -123,6 +56,93 @@ struct PaywallView: View {
                 SafariView(url: urlToOpen)
             }
         }
+    }
+    
+    // MARK: Private
+    
+    @ViewBuilder
+    private var closeButton: some View {
+        VStack {
+            HStack {
+                Spacer()
+                Button {
+                    onClose?()
+                } label: {
+                    Image(.close)
+                        .resizable()
+                        .scaledToFill()
+                        .frame(width: 24, height: 24)
+                        .background(.textAndIcons.opacity(0.2))
+                        .clipShape(Circle())
+                }
+                .frame(width: 56, height: 56)
+                .padding(.top, 52)
+            }
+            Spacer()
+        }
+    }
+    
+    @ViewBuilder
+    private var textAndToggle: some View {
+        Text(Strings.Paywall.title)
+            .font(Fonts.Roboto.regular.swiftUIFont(fixedSize: 28))
+            .foregroundColor(.textAndIcons)
+
+        Text(trialEnabled ? Strings.Paywall.Subtitle.withTrial(mockPrice) : Strings.Paywall.subtitle(mockPrice))
+            .font(Fonts.Roboto.regular.swiftUIFont(fixedSize: 17))
+            .foregroundColor(.textAndIcons.opacity(0.5))
+            .animation(.easeInOut, value: trialEnabled)
+        
+        Toggle(isOn: $trialEnabled) {
+            Text(trialEnabled ? Strings.Paywall.Trial.enabled : Strings.Paywall.Trial.disabled)
+                .font(Fonts.Roboto.regular.swiftUIFont(fixedSize: 17))
+                .foregroundColor(.textAndIcons.opacity(0.5))
+                .animation(.easeInOut, value: trialEnabled)
+        }
+        .padding(.horizontal, 16)
+        .frame(height: 56)
+        .background(.textAndIcons.opacity(0.15))
+        .cornerRadius(15)
+    }
+    
+    @ViewBuilder
+    private var actionButton: some View {
+        ActionButton(title: Strings.Common.continue) {
+            isLoading = true
+            Task {
+                try await Task.sleep(for: .seconds(2))
+                isLoading = false
+                hasSeenOnboarding = true
+            }
+        }
+        .padding(.bottom, 16)
+    }
+    
+    @ViewBuilder
+    private var bottomButtons: some View {
+        HStack {
+            Button(Strings.Paywall.terms) {
+                urlToOpen = URL(string: "https://www.google.com")
+                showWebView = true
+            }
+            Spacer()
+            Button(Strings.Paywall.restore) {
+                isLoading = true
+                Task {
+                    try await Task.sleep(for: .seconds(2))
+                    isLoading = false
+                    hasSeenOnboarding = true
+                }
+            }
+            Spacer()
+            Button(Strings.Paywall.privacy) {
+                urlToOpen = URL(string: "https://www.google.com")
+                showWebView = true
+            }
+        }
+        .font(Fonts.Roboto.regular.swiftUIFont(fixedSize: 12))
+        .foregroundColor(.textAndIcons.opacity(0.5))
+        .padding(.horizontal, 16)
     }
 
 }

@@ -30,16 +30,7 @@ struct OnboardingView: View {
                 Spacer()
                     .frame(height: UIScreen.main.bounds.height * 2 / 3.1)
                 
-                Text(viewModel.currentTitle)
-                    .font(Fonts.Roboto.regular.swiftUIFont(fixedSize: 28))
-                    .foregroundColor(.textAndIcons)
-                    .animation(.easeInOut(duration: 0.25), value: viewModel.currentTitle)
-                    .padding(.bottom, 12)
-                Text(viewModel.currentSubtitle)
-                    .font(Fonts.Roboto.regular.swiftUIFont(fixedSize: 17))
-                    .foregroundColor(.textAndIcons.opacity(0.5))
-                    .animation(.easeInOut(duration: 0.25), value: viewModel.currentSubtitle)
-                    .padding(.bottom, 16)
+                textContent
                 
                 ActionButton(title: Strings.Common.continue) {
                     showPaywall = viewModel.currentPageIndex == 2
@@ -47,22 +38,7 @@ struct OnboardingView: View {
                 }
                 .padding(.bottom, 32)
                 
-                HStack {
-                    Button(Strings.Paywall.terms) {
-                        urlToOpen = URL(string: "https://www.google.com")
-                        showWebView = true
-                    }
-                    Spacer()
-                    Button(Strings.Paywall.restore) {}
-                    Spacer()
-                    Button(Strings.Paywall.privacy) {
-                        urlToOpen = URL(string: "https://www.google.com")
-                        showWebView = true
-                    }
-                }
-                .font(Fonts.Roboto.regular.swiftUIFont(fixedSize: 12))
-                .foregroundColor(.textAndIcons.opacity(0.5))
-                .padding(.horizontal, 16)
+                bottomButtons
                 
                 Spacer(minLength: 0)
             }
@@ -85,6 +61,42 @@ struct OnboardingView: View {
                 hasSeenOnboarding = true
             }
         }
+    }
+    
+    // MARK: Private
+    
+    @ViewBuilder
+    private var textContent: some View {
+        Text(viewModel.currentTitle)
+            .font(Fonts.Roboto.regular.swiftUIFont(fixedSize: 28))
+            .foregroundColor(.textAndIcons)
+            .animation(.easeInOut(duration: 0.25), value: viewModel.currentTitle)
+            .padding(.bottom, 12)
+        Text(viewModel.currentSubtitle)
+            .font(Fonts.Roboto.regular.swiftUIFont(fixedSize: 17))
+            .foregroundColor(.textAndIcons.opacity(0.5))
+            .animation(.easeInOut(duration: 0.25), value: viewModel.currentSubtitle)
+            .padding(.bottom, 16)
+    }
+    
+    @ViewBuilder
+    private var bottomButtons: some View {
+        HStack {
+            Button(Strings.Paywall.terms) {
+                urlToOpen = URL(string: "https://www.google.com")
+                showWebView = true
+            }
+            Spacer()
+            Button(Strings.Paywall.restore) {}
+            Spacer()
+            Button(Strings.Paywall.privacy) {
+                urlToOpen = URL(string: "https://www.google.com")
+                showWebView = true
+            }
+        }
+        .font(Fonts.Roboto.regular.swiftUIFont(fixedSize: 12))
+        .foregroundColor(.textAndIcons.opacity(0.5))
+        .padding(.horizontal, 16)
     }
     
 }
