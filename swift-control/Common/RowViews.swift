@@ -41,17 +41,14 @@ struct ConnectionItemRow: View {
     
     // MARK: Properties
     
-    // TODO: Use device and connection status models to configure row
     let name: String
-    let backgroundColor: Color
-    let statusText: String
-    let statusTextColor: Color
+    let status: ConnectionStatus
     
     // MARK: Body
     
     var body: some View {
         ZStack {
-            Color(backgroundColor)
+            Color(status.deviceCellBackgroundColor)
             HStack(spacing: 10) {
                 Image(.tvOpaque)
                 Text(name)
@@ -60,9 +57,9 @@ struct ConnectionItemRow: View {
                 
                 Spacer()
                 
-                Text(statusText)
-                    .font(Fonts.Roboto.regular.swiftUIFont(fixedSize: 17))
-                    .foregroundStyle(statusTextColor)
+                Text(status.deviceCellText)
+                    .font(Fonts.Roboto.regular.swiftUIFont(fixedSize: 12))
+                    .foregroundStyle(status.deviceCellTextColor)
             }
             .padding(16)
         }
@@ -82,23 +79,9 @@ struct ConnectionItemRow: View {
 #Preview {
     List {
         SettingsRow(item: .instruction)
-        ConnectionItemRow(
-            name: "Smart TV name",
-            backgroundColor: .backgroundSecondary,
-            statusText: "Not connected",
-            statusTextColor: .textAndIcons.opacity(0.5)
-        )
-        ConnectionItemRow(
-            name: "Smart TV name",
-            backgroundColor: .accentPrimary,
-            statusText: "Connected",
-            statusTextColor: .textAndIcons
-        )
-        ConnectionItemRow(
-            name: "Smart TV name",
-            backgroundColor: .backgroundSecondary,
-            statusText: "Disconnected",
-            statusTextColor: .accentPrimary
-        )
+        ConnectionItemRow(name: "Smart TV", status: .empty)
+        ConnectionItemRow(name: "Samsung OLED", status: .connection)
+        ConnectionItemRow(name: "Huawei", status: .disconnected)
+        ConnectionItemRow(name: "Philips", status: .error)
     }
 }

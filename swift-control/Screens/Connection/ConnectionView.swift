@@ -7,11 +7,13 @@
 
 import SwiftUI
 
+import Lottie
+
 struct ConnectionView: View {
     
     // MARK: Properties
     
-    @State private var isSearching = false
+    @ObservedObject private var viewModel = ConnectionViewModel()
     
     // MARK: Body
 
@@ -34,27 +36,25 @@ struct ConnectionView: View {
                 
                 Spacer()
                 
-                if isSearching {
+                if viewModel.isSearching {
                     HStack {
-                        Image(.connectSearching)
+                        if let animation = viewModel.getSearchAnimation() {
+                            LottieView(animation: animation)
+                                .playing(loopMode: .loop)
+                        } else {
+                            Image(.connectSearching)
+                        }
                     }
                     .frame(maxWidth: .infinity)
-                    
                     Spacer()
                 } else {
                     List {
-                        ForEach(0..<10) { index in
-                            // TODO: Use device and connection status models to configure row
-                            ConnectionItemRow(
-                                name: index % 2 == 0 ? "Samsung TV" : "Smart TV name",
-                                backgroundColor: index % 2 == 0 ? .accentPrimary : .backgroundSecondary,
-                                statusText: index % 2 == 0 ? "Connected" : "Not connected",
-                                statusTextColor: index % 2 == 0 ? .textAndIcons : .textAndIcons.opacity(0.5)
-                            )
+                        ForEach(viewModel.devices, id: \.id) { device in
+                            ConnectionItemRow(name: device.name, status: device.status)
                             .listRowSeparator(.hidden)
                             .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 8, trailing: 0))
                             .onTapGesture {
-                                // code
+                                viewModel.connect(to: device)
                             }
                         }
                     }
@@ -63,7 +63,7 @@ struct ConnectionView: View {
                     .padding(.top, 8)
                 }
                 
-                if isSearching {
+                if viewModel.isSearching {
                     HStack {
                         Text(Strings.Connection.searching)
                             .font(Fonts.Roboto.regular.swiftUIFont(fixedSize: 17))
@@ -73,6 +73,9 @@ struct ConnectionView: View {
                 }
             }
             .padding(16)
+            .onAppear {
+                viewModel.getDevices()
+            }
         }
     }
 

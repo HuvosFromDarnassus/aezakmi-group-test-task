@@ -38,7 +38,9 @@ struct RemoteControlView: View {
                     .onTapGesture {
                         showConnectionSheet = true
                     }
+                
                 topButtons
+                
                 if showNumpad {
                     numpad
                         .transition(.move(edge: .bottom).combined(with: .opacity))
@@ -46,6 +48,7 @@ struct RemoteControlView: View {
                     dPad
                         .transition(.move(edge: .bottom).combined(with: .opacity))
                 }
+                
                 Spacer()
             }
             .animation(.easeInOut(duration: 0.2), value: showNumpad)
@@ -86,14 +89,14 @@ struct RemoteControlView: View {
         ZStack {
             BackgroundGradient(
                 cornerRadius: 16,
-                colors: [viewModel.connectionStatus.backgroundColor]
+                colors: [viewModel.connectionStatus.statusBarBackgroundColor]
             )
             HStack(spacing: 11) {
-                viewModel.connectionStatus.icon
-                    .foregroundColor(viewModel.connectionStatus.textColor)
-                Text(viewModel.connectionStatus.text)
+                viewModel.connectionStatus.statusBarIcon
+                    .foregroundColor(viewModel.connectionStatus.statusBarTextColor)
+                Text(viewModel.connectionStatus.statusBarText)
                     .font(Fonts.Roboto.regular.swiftUIFont(fixedSize: 17))
-                    .foregroundColor(viewModel.connectionStatus.textColor)
+                    .foregroundColor(viewModel.connectionStatus.statusBarTextColor)
             }
         }
         .frame(height: Constants.Sizes.statusBarHeight)
