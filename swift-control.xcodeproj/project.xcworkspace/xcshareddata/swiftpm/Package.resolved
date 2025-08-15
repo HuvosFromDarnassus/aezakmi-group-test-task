@@ -1,5 +1,5 @@
 {
-  "originHash" : "0a79f2009ea5ba6a9e7c2c6471d05458a7ac9a981d2fd7ab914f1eb741af1ea1",
+  "originHash" : "075675d88f3139fdb680b0ac610d7856a8892bf7638639aee48c1a821f1235a6",
   "pins" : [
     {
       "identity" : "lottie-ios",
@@ -8,6 +8,15 @@
       "state" : {
         "revision" : "a004050748dc197c56256a14dca49a035d74726c",
         "version" : "4.5.2"
+      }
+    },
+    {
+      "identity" : "webosclient",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/jareksedy/WebOSClient",
+      "state" : {
+        "revision" : "754990e6a8321ebaba3f3bf8ff3c90c19e9f9719",
+        "version" : "1.5.1"
       }
     }
   ],

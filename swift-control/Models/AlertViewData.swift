@@ -12,7 +12,7 @@ struct AlertViewData: Identifiable {
     let id = UUID()
     let title: String
     let message: String
-    let actionTitle: String
-    let action: () -> Void
+    let actionTitle: String?
+    let action: (() -> Void)?
 
 }
