@@ -6,8 +6,10 @@
 //
 
 import SwiftUI
+import Combine
 
 @Observable
+@MainActor
 final class RemoteControlViewModel: ObservableObject {
     
     // MARK: Properties
@@ -44,6 +46,14 @@ final class RemoteControlViewModel: ObservableObject {
          RemoteButtonConfig(label: "9", icon: "",                       type: .nine),
          RemoteButtonConfig(label: "OK", icon: "",                      type: .ok)]
     ]
+    
+    private var cancellables = Set<AnyCancellable>()
+    
+    // MARK: Initializers
+    
+    init() {
+        setupBindings()
+    }
     
     // MARK: Events
     
@@ -111,45 +121,20 @@ final class RemoteControlViewModel: ObservableObject {
         }
     }
     
-}
-
-enum ConnectionStatus {
+    // MARK: Private
     
-    case empty
-    case connected(deviceName: String)
-    case disconnected
-    
-    var icon: Image {
-        switch self {
-        case .empty:        .init(.tvLinethrough)
-        case .connected:    .init(.tv)
-        case .disconnected: .init(.tvLinethroughRed)
-        }
-    }
-    
-    var text: String {
-        switch self {
-        case .empty:        "Connect to TV"
-        case .disconnected: "Disconnected"
-        case .connected(let deviceName):
-            deviceName
-        }
-    }
-    
-    var backgroundColor: Color {
-        switch self {
-        case .empty:        .init(.backgroundPrimary)
-        case .connected:    .init(.accentSecondary)
-        case .disconnected: .init(.backgroundPrimary)
-        }
-    }
-    
-    var textColor: Color {
-        switch self {
-        case .empty:        .init(.textAndIcons)
-        case .connected:    .init(.textAndIcons)
-        case .disconnected: .init(.accentPrimary)
-        }
+    private func setupBindings() {
+        DeviceManager.shared.deviceConnectionFinished
+            .sink { [weak self] result, _ in
+                switch result {
+                case .success(let device):
+                    guard let device else { return }
+                    self?.connectionStatus = device.status
+                case .failure:
+                    break
+                }
+            }
+            .store(in: &cancellables)
     }
     
 }

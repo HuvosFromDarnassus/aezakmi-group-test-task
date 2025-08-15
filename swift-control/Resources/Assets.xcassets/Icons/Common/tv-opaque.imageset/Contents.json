@@ -1,0 +1,12 @@
+{
+  "images" : [
+    {
+      "filename" : "tv-opaque.pdf",
+      "idiom" : "universal"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}

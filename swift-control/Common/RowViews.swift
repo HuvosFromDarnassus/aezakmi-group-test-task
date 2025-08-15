@@ -32,10 +32,46 @@ struct SettingsRow: View {
         }
         .frame(height: 56)
         .cornerRadius(15)
-        .contentShape(Rectangle())
         .listRowBackground(Color.clear)
     }
 
+}
+
+struct ConnectionItemRow: View {
+    
+    // MARK: Properties
+    
+    let name: String
+    let status: ConnectionStatus
+    
+    // MARK: Body
+    
+    var body: some View {
+        ZStack {
+            Color(status.deviceCellBackgroundColor)
+            HStack(spacing: 10) {
+                Image(.tvOpaque)
+                Text(name)
+                    .font(Fonts.Roboto.regular.swiftUIFont(fixedSize: 17))
+                    .foregroundStyle(.textAndIcons)
+                
+                Spacer()
+                
+                Text(status.deviceCellText)
+                    .font(Fonts.Roboto.regular.swiftUIFont(fixedSize: 12))
+                    .foregroundStyle(status.deviceCellTextColor)
+            }
+            .padding(16)
+        }
+        .frame(height: 56)
+        .cornerRadius(15)
+        .overlay(
+            RoundedRectangle(cornerRadius: 15)
+                .stroke(Color.black, lineWidth: 1)
+        )
+        .listRowBackground(Color.clear)
+    }
+    
 }
 
 // MARK: - Preview
@@ -43,5 +79,9 @@ struct SettingsRow: View {
 #Preview {
     List {
         SettingsRow(item: .instruction)
+        ConnectionItemRow(name: "Smart TV", status: .empty)
+        ConnectionItemRow(name: "Samsung OLED", status: .connection)
+        ConnectionItemRow(name: "Huawei", status: .disconnected)
+        ConnectionItemRow(name: "Philips", status: .error)
     }
 }

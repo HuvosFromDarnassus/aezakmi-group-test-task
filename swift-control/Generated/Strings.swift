@@ -21,8 +21,8 @@ internal enum Strings {
   internal enum Connection {
     /// Your device not found?
     internal static let notFound = Strings.tr("Localizable", "connection.notFound", fallback: "Your device not found?")
-    /// Connected
-    internal static let searching = Strings.tr("Localizable", "connection.searching", fallback: "Connected")
+    /// Searching...
+    internal static let searching = Strings.tr("Localizable", "connection.searching", fallback: "Searching...")
     /// Make sure your TV is turned on and connected to the same Wi-Fi network
     internal static let subtitle = Strings.tr("Localizable", "connection.subtitle", fallback: "Make sure your TV is turned on and connected to the same Wi-Fi network")
     /// Connect to TV
@@ -46,12 +46,14 @@ internal enum Strings {
       internal static let title = Strings.tr("Localizable", "connection.pairing.title", fallback: "Pairing with device ")
     }
     internal enum Status {
-      /// Searching...
-      internal static let connected = Strings.tr("Localizable", "connection.status.connected", fallback: "Searching...")
+      /// Connected
+      internal static let connected = Strings.tr("Localizable", "connection.status.connected", fallback: "Connected")
       /// Connection...
       internal static let connection = Strings.tr("Localizable", "connection.status.connection", fallback: "Connection...")
+      /// Disconnected
+      internal static let disconnected = Strings.tr("Localizable", "connection.status.disconnected", fallback: "Disconnected")
       /// Not connected
-      internal static let disconnected = Strings.tr("Localizable", "connection.status.disconnected", fallback: "Not connected")
+      internal static let empty = Strings.tr("Localizable", "connection.status.empty", fallback: "Not connected")
       /// Сonnection error. Try again
       internal static let error = Strings.tr("Localizable", "connection.status.error", fallback: "Сonnection error. Try again")
     }
