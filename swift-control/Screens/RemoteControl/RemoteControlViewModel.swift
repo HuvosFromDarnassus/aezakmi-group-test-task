@@ -51,7 +51,6 @@ final class RemoteControlViewModel: ObservableObject {
     var alertViewData: AlertViewData?
     
     private var cancellables = Set<AnyCancellable>()
-    private let tvEmulatorURL = URL(string: "ws://192.168.100.68:3001")
     private var tvToken: String?
     private var tvClient: WebOSClientProtocol?
     
@@ -59,10 +58,16 @@ final class RemoteControlViewModel: ObservableObject {
     
     init() {
         setupBindings()
-        setupTvClient()
     }
     
     // MARK: Events
+    
+    func setupTvClient(with emulatorIP: String) {
+        guard let url = URL(string: "ws://\(emulatorIP):3001") else { return }
+        tvClient = WebOSClient(url: url, delegate: self, shouldLogActivity: true)
+        tvClient?.connect()
+        tvClient?.send(.register(pairingType: .pin, clientKey: tvToken))
+    }
     
     func didTapButton(_ button: RemoteControlViewData) {
         guard let tvClient else { return }
@@ -117,12 +122,6 @@ final class RemoteControlViewModel: ObservableObject {
             .store(in: &cancellables)
     }
     
-    private func setupTvClient() {
-        tvClient = WebOSClient(url: tvEmulatorURL!, delegate: self, shouldLogActivity: true)
-        tvClient?.connect()
-        tvClient?.send(.register(pairingType: .pin, clientKey: tvToken))
-    }
-    
 }
 
 // MARK: - WebOSClientDelegate
@@ -132,6 +131,19 @@ extension RemoteControlViewModel: WebOSClientDelegate {
     func didRegister(with clientKey: String) {
         Task { @MainActor in
             tvToken = clientKey
+        }
+    }
+    
+    func didConnect() {
+        Task { @MainActor in
+            alertViewData = AlertViewData(
+                title: "Подключение завершено",
+                message: "Устройство успешно подключено к эмулятору.",
+                actionTitle: "OK",
+                action: { [weak self] in
+                    self?.alertViewData = nil
+                }
+            )
         }
     }
     

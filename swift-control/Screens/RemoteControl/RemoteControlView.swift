@@ -14,6 +14,7 @@ struct RemoteControlView: View {
     @StateObject private var viewModel = RemoteControlViewModel()
     @State private var showNumpad = false
     @State private var showConnectionSheet = false
+    @State private var showEmulatorURLAlert = false
     
     private enum Constants {
         enum Sizes {
@@ -68,6 +69,34 @@ struct RemoteControlView: View {
                 .presentationContentInteraction(.scrolls)
                 .presentationCompactAdaptation(.none)
         }
+        .overlay(
+            InputAlertView(
+                isPresented: $showEmulatorURLAlert,
+                title: "Введите IP компьютера, на котором запущен эмулятор LG TV."
+            ) { text in
+                viewModel.setupTvClient(with: text)
+                showEmulatorURLAlert = false
+            }
+                .transition(.opacity)
+        )
+        .alert(item: $viewModel.alertViewData) { alert in
+            Alert(
+                title: Text(alert.title),
+                message: Text(alert.message),
+                primaryButton: .cancel(),
+                secondaryButton: .default(
+                    Text(alert.actionTitle ?? ""),
+                    action: alert.action
+                )
+            )
+        }
+        .onAppear {
+            Task {
+                try? await Task.sleep(for: .seconds(2))
+                showEmulatorURLAlert = true
+            }
+        }
+        .animation(.easeInOut(duration: 0.25), value: showEmulatorURLAlert)
     }
     
     // MARK: Private
