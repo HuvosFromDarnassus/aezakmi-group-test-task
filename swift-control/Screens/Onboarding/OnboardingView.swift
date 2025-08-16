@@ -51,11 +51,17 @@ struct OnboardingView: View {
         }
         .background(.backgroundPrimary)
         .animation(.easeInOut(duration: 0.25), value: viewModel.currentBackgroundImage)
-        .fullScreenCover(isPresented: $showWebView) {
+        .sheet(isPresented: $showWebView) {
             showWebView = false
         } content: {
             if let urlToOpen {
                 SafariView(url: urlToOpen)
+                    .presentationDetents([.fraction(0.99)])
+                    .presentationDragIndicator(.hidden)
+                    .presentationBackground(.clear)
+                    .presentationCornerRadius(20)
+                    .presentationContentInteraction(.scrolls)
+                    .presentationCompactAdaptation(.none)
             }
         }
         .fullScreenCover(isPresented: $showPaywall) {

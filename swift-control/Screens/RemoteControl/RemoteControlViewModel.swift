@@ -153,8 +153,10 @@ extension RemoteControlViewModel: WebOSClientDelegate {
             alertViewData = AlertViewData(
                 title: "Error",
                 message: error.localizedDescription,
-                actionTitle: nil,
-                action: nil
+                actionTitle: "OK",
+                action: { [weak self] in
+                    self?.alertViewData = nil
+                }
             )
         }
     }

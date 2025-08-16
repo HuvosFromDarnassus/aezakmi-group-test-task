@@ -11,6 +11,7 @@ struct SettingsView: View {
     
     // MARK: Properties
     
+    @EnvironmentObject private var tabBarState: TabBarState
     @State private var selection: SettingsItem? = nil
     @State private var showShareSheet = false
     @State private var showInstructionView = false
@@ -36,6 +37,8 @@ struct SettingsView: View {
                 )) {
                     if let item = selection {
                         item.destination
+                            .onAppear { tabBarState.isHidden = true }
+                            .onDisappear { tabBarState.isHidden = false }
                     }
                 }
                 .sheet(isPresented: $showInstructionView) {
