@@ -32,8 +32,9 @@ struct PaywallView: View {
             
             VStack(alignment: .leading, spacing: 16) {
                 Spacer()
-                    .frame(height: UIScreen.main.bounds.height / 1.8)
+                    .frame(height: UIScreen.main.bounds.height / 2.3)
 
+                featuresList
                 textAndToggle
                 actionButton
                 bottomButtons
@@ -79,6 +80,15 @@ struct PaywallView: View {
                 .padding(.top, 52)
             }
             Spacer()
+        }
+    }
+    
+    @ViewBuilder
+    private var featuresList: some View {
+        HStack(alignment: .center, spacing: 9) {
+            ForEach(PaywallFeaturesViewData.allCases, id: \.self) { feature in
+                PaywallFeatureView(icon: feature.icon, text: feature.text)
+            }
         }
     }
     

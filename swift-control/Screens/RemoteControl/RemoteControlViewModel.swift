@@ -138,7 +138,7 @@ extension RemoteControlViewModel: WebOSClientDelegate {
         Task { @MainActor in
             alertViewData = AlertViewData(
                 title: "Подключение завершено",
-                message: "Устройство успешно подключено к эмулятору.",
+                message: "Устройство подключено к эмулятору.",
                 actionTitle: "OK",
                 action: { [weak self] in
                     self?.alertViewData = nil
