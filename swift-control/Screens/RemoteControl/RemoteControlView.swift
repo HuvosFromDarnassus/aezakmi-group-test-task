@@ -105,7 +105,8 @@ struct RemoteControlView: View {
                                 SquareButton(
                                     label: config.label,
                                     icon: config.icon,
-                                    size: Constants.Sizes.sqButton
+                                    size: Constants.Sizes.sqButton,
+                                    isSticky: config.isSticky
                                 ) {
                                     viewModel.didTapButton(config.type)
                                 }
@@ -218,10 +219,10 @@ struct RemoteControlView: View {
     private func offset(for type: RemoteControlViewData, pad: CGFloat) -> CGSize {
         let r = pad * 0.35
         switch type {
-        case .up:    return CGSize(width: 0,      height: -r)
-        case .down:  return CGSize(width: 0,      height:  r)
-        case .left:  return CGSize(width: -r,     height:  0)
-        case .right: return CGSize(width:  r,     height:  0)
+        case .up:    return CGSize(width: 0,  height: -r)
+        case .down:  return CGSize(width: 0,  height:  r)
+        case .left:  return CGSize(width: -r, height:  0)
+        case .right: return CGSize(width:  r, height:  0)
         case .ok:    return .zero
         default:     return .zero
         }

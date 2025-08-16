@@ -73,8 +73,11 @@ struct SquareButton: View {
     let icon: String
     let size: CGFloat
     let isAccent: Bool
+    let isSticky: Bool
     let action: () -> Void
+    
     @State private var isPressed = false
+    @State private var isToggled = false
     
     // MARK: Initilizers
     
@@ -83,6 +86,7 @@ struct SquareButton: View {
         icon: String,
         size: CGFloat,
         isAccent: Bool = false,
+        isSticky: Bool = false,
         action: @escaping () -> Void,
         isPressed: Bool = false
     ) {
@@ -90,6 +94,7 @@ struct SquareButton: View {
         self.icon = icon
         self.size = size
         self.isAccent = isAccent
+        self.isSticky = isSticky
         self.action = action
         self.isPressed = isPressed
     }
@@ -97,22 +102,30 @@ struct SquareButton: View {
     // MARK: Body
     
     var body: some View {
-        Button(action: action) {
+        Button(action: {
+            action()
+            
+            if isSticky {
+                isToggled.toggle()
+            }
+        }) {
             ZStack {
                 BackgroundGradient(
                     shape: .rect,
                     cornerRadius: 25,
                     colors: [
-                        isAccent ? Color(hex: "#C8135C") : Color(hex: "#2C2F36"),
-                        isAccent ? Color(hex: "#9F0040") : Color(hex: "#1A1C20")
+                        isAccent || isToggled ? Color(hex: "#C8135C") : Color(hex: "#2C2F36"),
+                        isAccent || isToggled ? Color(hex: "#9F0040") : Color(hex: "#1A1C20")
                     ]
                 )
+                .transition(.scale.combined(with: .opacity))
+                .animation(.spring(response: 0.3, dampingFraction: 0.6), value: isToggled)
                 
                 if label.isEmpty {
                     Image(icon)
                 } else {
                     Text(label)
-                        .font(Fonts.Roboto.regular.swiftUIFont(fixedSize: isAccent ? 28 : 17))
+                        .font(Fonts.Roboto.regular.swiftUIFont(fixedSize: isAccent || isToggled ? 28 : 17))
                         .foregroundStyle(.textAndIcons)
                 }
             }
@@ -121,7 +134,13 @@ struct SquareButton: View {
             .animation(.spring(response: 0.25, dampingFraction: 0.6), value: isPressed)
             .onLongPressGesture(minimumDuration: 0.01, pressing: { pressing in
                 isPressed = pressing
-            }, perform: action)
+            }, perform: {
+                action()
+                
+                if isSticky {
+                    isToggled.toggle()
+                }
+            })
             .accessibilityLabel(Text(label))
         }
         .buttonStyle(.plain)
@@ -403,21 +422,12 @@ fileprivate struct SectorShape: Shape {
             .ignoresSafeArea()
 
         VStack(spacing: 24) {
-            ActionButton(title: "Continue") {
-                print("Tap")
-            }
-            
-            HStack {
-                TabButton(isSelected: true, icon: .init(.control), action: {})
-                TabButton(isSelected: false, icon: .init(.settings), action: {})
-            }
-            
             VStack {
                 HStack(spacing: 12) {
-                    SquareButton(label: "", icon: "power", size: 70, action: {})
-                    SquareButton(label: "MENU", icon: "", size: 70, action: {})
-                    SquareButton(label: "", icon: "volume-off", size: 70, action: {})
-                    SquareButton(label: "", icon: "chevron-up", size: 70, isAccent: true, action: {})
+                    SquareButton(label: "", icon: "power", size: 70, isSticky: true) {}
+                    SquareButton(label: "MENU", icon: "", size: 70) {}
+                    SquareButton(label: "", icon: "volume-off", size: 70) {}
+                    SquareButton(label: "", icon: "chevron-up", size: 70, isAccent: true) {}
                 }
                 HStack(spacing: 12) {
                     RectangleButton(
@@ -448,6 +458,13 @@ fileprivate struct SectorShape: Shape {
                     SemicircleButton(label: "", icon: "chevron-right", radius: 250, isAccent: true, orientation: .right) {}
                     CircleButtom(label: "OK", icon: "", size: 120, isAccent: true) {}
                 }
+            }
+            ActionButton(title: "Continue") {
+                print("Tap")
+            }
+            HStack {
+                TabButton(isSelected: true, icon: .init(.control)) {}
+                TabButton(isSelected: false, icon: .init(.settings)) {}
             }
         }
     }
