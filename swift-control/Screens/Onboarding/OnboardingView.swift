@@ -27,8 +27,13 @@ struct OnboardingView: View {
                 .ignoresSafeArea()
             
             VStack(alignment: .leading) {
-                Spacer()
-                    .frame(height: UIScreen.main.bounds.height * 2 / 3.1)
+                if viewModel.currentPageIndex == 1 {
+                    fakeReviews
+                        .frame(height: UIScreen.main.bounds.height * 2 / 3.16)
+                } else {
+                    Spacer()
+                        .frame(height: UIScreen.main.bounds.height * 2 / 3.1)
+                }
                 
                 textContent
                 
@@ -64,6 +69,16 @@ struct OnboardingView: View {
     }
     
     // MARK: Private
+    
+    @ViewBuilder
+    private var fakeReviews: some View {
+        VStack(alignment: .center, spacing: 21) {
+            ForEach(OnboardingFakeReviewsViewData.allCases, id: \.self) { review in
+                FakeReviewView(viewData: review)
+            }
+        }
+        .frame(maxWidth: .infinity)
+    }
     
     @ViewBuilder
     private var textContent: some View {

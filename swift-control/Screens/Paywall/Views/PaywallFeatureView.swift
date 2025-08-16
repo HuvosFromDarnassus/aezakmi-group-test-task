@@ -13,7 +13,6 @@ struct PaywallFeatureView: View {
     
     let icon: Image
     let text: String
-    
     private let width: CGFloat = UIScreen.main.bounds.width / 2.25
     
     // MARK: Body
