@@ -74,6 +74,44 @@ struct ConnectionItemRow: View {
     
 }
 
+struct InstructionItemRow: View {
+    
+    // MARK: Properties
+    
+    let instruction: InstructionViewData
+    
+    // MARK: Body
+    
+    var body: some View {
+        ZStack {
+            Color(.backgroundSecondary)
+            
+            VStack(spacing: 8) {
+                instruction.illustration
+                    .resizable()
+                    .scaledToFill()
+                    .frame(width: 311, height: 147)
+                    .cornerRadius(15)
+                
+                Text(instruction.text)
+                    .font(Fonts.Roboto.regular.swiftUIFont(fixedSize: 16))
+                    .foregroundStyle(.textAndIcons)
+                    .multilineTextAlignment(.center)
+                    .padding(.horizontal)
+            }
+            .padding(16)
+        }
+        .frame(height: 223)
+        .cornerRadius(15)
+        .overlay(
+            RoundedRectangle(cornerRadius: 15)
+                .stroke(Color.black, lineWidth: 2)
+        )
+        .listRowBackground(Color.clear)
+    }
+    
+}
+
 // MARK: - Preview
 
 #Preview {
@@ -83,5 +121,7 @@ struct ConnectionItemRow: View {
         ConnectionItemRow(name: "Samsung OLED", status: .connection)
         ConnectionItemRow(name: "Huawei", status: .disconnected)
         ConnectionItemRow(name: "Philips", status: .error)
+        InstructionItemRow(instruction: .connect)
+        InstructionItemRow(instruction: .allow)
     }
 }

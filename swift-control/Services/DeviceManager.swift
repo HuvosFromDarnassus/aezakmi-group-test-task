@@ -15,11 +15,10 @@ final class DeviceManager {
     
     static let shared = DeviceManager()
     
-    /// Publishers
     let deviceRequestedPin = PassthroughSubject<Void, Never>()
     let selectedDeviceConnected = PassthroughSubject<Void, Never>()
     let deviceConnectionFinished = PassthroughSubject<(Result<MockDevice?, ConnectionError>, [MockDevice]), Never>()
-    /// State
+
     private(set) var currentDevice: MockDevice?
     private var devices: [MockDevice] = []
     private var requestedDevice: MockDevice?
@@ -92,7 +91,7 @@ final class DeviceManager {
         let updatedCurrentDevice = devices.first(where: { $0.id == currentDevice.id })
         deviceConnectionFinished.send((.success(updatedCurrentDevice), devices))
         
-        self.currentDevice = nil
+        self.currentDevice = updatedCurrentDevice
     }
     
     // MARK: Private
