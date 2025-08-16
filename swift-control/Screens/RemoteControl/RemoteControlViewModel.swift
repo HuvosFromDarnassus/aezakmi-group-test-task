@@ -16,7 +16,7 @@ final class RemoteControlViewModel: ObservableObject {
     
     // MARK: Properties
     
-    var connectionStatus: ConnectionStatus = .empty
+    var connectionStatus: ConnectionStatus = DeviceManager.shared.currentDevice?.status ?? .empty
     let topButtonsGrid: [[RemoteButtonConfig?]] = [
         [RemoteButtonConfig(isRectangular: true, label: "", icon: "",   type: .channel)],
         [RemoteButtonConfig(label: "", icon: "power",                   type: .power),

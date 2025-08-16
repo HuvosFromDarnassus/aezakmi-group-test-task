@@ -61,7 +61,7 @@ struct RemoteControlView: View {
             showConnectionSheet = false
         } content: {
             ConnectionView()
-                .presentationDetents([.medium])
+                .presentationDetents([.fraction(0.65)])
                 .presentationDragIndicator(.visible)
                 .presentationBackground(.backgroundSecondary)
                 .presentationCornerRadius(20)

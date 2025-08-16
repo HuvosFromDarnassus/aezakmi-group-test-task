@@ -39,8 +39,6 @@ enum SettingsItem: CaseIterable {
     @ViewBuilder
     var destination: some View {
         switch self {
-        case .instruction:
-            Text("Instruction")
         case .privacy:
             SafariView(url: URL(string: "https://www.google.com")!)
         case .terms:
@@ -48,7 +46,7 @@ enum SettingsItem: CaseIterable {
         case .support:
             SafariView(url: URL(string: "https://www.google.com")!)
         default:
-            Text("")
+            EmptyView()
         }
     }
     

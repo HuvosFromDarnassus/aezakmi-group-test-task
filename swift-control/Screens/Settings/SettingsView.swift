@@ -13,6 +13,7 @@ struct SettingsView: View {
     
     @State private var selection: SettingsItem? = nil
     @State private var showShareSheet = false
+    @State private var showInstructionView = false
     
     // MARK: Body
 
@@ -37,6 +38,17 @@ struct SettingsView: View {
                         item.destination
                     }
                 }
+                .sheet(isPresented: $showInstructionView) {
+                    showInstructionView = false
+                } content: {
+                    InstructionView { showInstructionView = false }
+                        .presentationDetents([.fraction(0.999)])
+                        .presentationDragIndicator(.visible)
+                        .presentationBackground(.backgroundSecondary)
+                        .presentationCornerRadius(20)
+                        .presentationContentInteraction(.scrolls)
+                        .presentationCompactAdaptation(.none)
+                }
             }
         }
     }
@@ -51,6 +63,8 @@ struct SettingsView: View {
                 .listRowInsets(EdgeInsets(top: 0, leading: 16, bottom: 8, trailing: 16))
                 .onTapGesture {
                     switch item {
+                    case .instruction:
+                        showInstructionView = true
                     case .share:
                         showShareSheet = true
                     default:

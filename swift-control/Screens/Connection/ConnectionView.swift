@@ -14,6 +14,7 @@ struct ConnectionView: View {
     // MARK: Properties
     
     @StateObject private var viewModel = ConnectionViewModel()
+    @State private var showInstructionView = false
     
     // MARK: Body
 
@@ -60,6 +61,17 @@ struct ConnectionView: View {
         .padding(16)
         .transition(.move(edge: .leading).combined(with: .opacity))
         .animation(.easeInOut(duration: 0.2), value: viewModel.isSearching)
+        .sheet(isPresented: $showInstructionView) {
+            showInstructionView = false
+        } content: {
+            InstructionView { showInstructionView = false }
+                .presentationDetents([.fraction(0.999)])
+                .presentationDragIndicator(.visible)
+                .presentationBackground(.backgroundSecondary)
+                .presentationCornerRadius(20)
+                .presentationContentInteraction(.scrolls)
+                .presentationCompactAdaptation(.none)
+        }
         .alert(item: $viewModel.alertViewData) { alert in
             Alert(
                 title: Text(alert.title),
@@ -79,8 +91,16 @@ struct ConnectionView: View {
             Text(Strings.Connection.title)
                 .font(Fonts.Roboto.semiBold.swiftUIFont(fixedSize: 20))
                 .foregroundStyle(.textAndIcons)
+            
             Spacer()
-            Image(.questionMark)
+            
+            Button {
+                showInstructionView = true
+            } label: {
+                Image(.questionMark)
+            }
+            .frame(width: 24, height: 24)
+            .padding(.trailing, 16)
         }
         Text(Strings.Connection.subtitle)
             .font(Fonts.Roboto.regular.swiftUIFont(fixedSize: 15))
