@@ -102,9 +102,9 @@ struct InstructionItemRow: View {
             .padding(16)
         }
         .frame(height: 223)
-        .cornerRadius(15)
+        .cornerRadius(20)
         .overlay(
-            RoundedRectangle(cornerRadius: 15)
+            RoundedRectangle(cornerRadius: 20)
                 .stroke(Color.black, lineWidth: 2)
         )
         .listRowBackground(Color.clear)

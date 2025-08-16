@@ -14,6 +14,7 @@ struct RemoteControlView: View {
     @StateObject private var viewModel = RemoteControlViewModel()
     @State private var showNumpad = false
     @State private var showConnectionSheet = false
+    @State private var showEmulatorURLAlert = false
     
     private enum Constants {
         enum Sizes {
@@ -68,6 +69,34 @@ struct RemoteControlView: View {
                 .presentationContentInteraction(.scrolls)
                 .presentationCompactAdaptation(.none)
         }
+        .overlay(
+            InputAlertView(
+                isPresented: $showEmulatorURLAlert,
+                title: "Введите IP компьютера, на котором запущен эмулятор LG TV."
+            ) { text in
+                viewModel.setupTvClient(with: text)
+                showEmulatorURLAlert = false
+            }
+                .transition(.opacity)
+        )
+        .alert(item: $viewModel.alertViewData) { alert in
+            Alert(
+                title: Text(alert.title),
+                message: Text(alert.message),
+                primaryButton: .cancel(),
+                secondaryButton: .default(
+                    Text(alert.actionTitle ?? ""),
+                    action: alert.action
+                )
+            )
+        }
+        .onAppear {
+            Task {
+                try? await Task.sleep(for: .seconds(2))
+                showEmulatorURLAlert = true
+            }
+        }
+        .animation(.easeInOut(duration: 0.25), value: showEmulatorURLAlert)
     }
     
     // MARK: Private
@@ -105,7 +134,8 @@ struct RemoteControlView: View {
                                 SquareButton(
                                     label: config.label,
                                     icon: config.icon,
-                                    size: Constants.Sizes.sqButton
+                                    size: Constants.Sizes.sqButton,
+                                    isSticky: config.isSticky
                                 ) {
                                     viewModel.didTapButton(config.type)
                                 }
@@ -218,10 +248,10 @@ struct RemoteControlView: View {
     private func offset(for type: RemoteControlViewData, pad: CGFloat) -> CGSize {
         let r = pad * 0.35
         switch type {
-        case .up:    return CGSize(width: 0,      height: -r)
-        case .down:  return CGSize(width: 0,      height:  r)
-        case .left:  return CGSize(width: -r,     height:  0)
-        case .right: return CGSize(width:  r,     height:  0)
+        case .up:    return CGSize(width: 0,  height: -r)
+        case .down:  return CGSize(width: 0,  height:  r)
+        case .left:  return CGSize(width: -r, height:  0)
+        case .right: return CGSize(width:  r, height:  0)
         case .ok:    return .zero
         default:     return .zero
         }

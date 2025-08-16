@@ -47,17 +47,20 @@ struct RemoteButtonConfig: Identifiable {
     
     let id = UUID()
     let isRectangular: Bool
+    let isSticky: Bool
     let label: String
     let icon: String
     let type: RemoteControlViewData
     
     init(
         isRectangular: Bool = false,
+        isSticky: Bool = false,
         label: String,
         icon: String,
         type: RemoteControlViewData
     ) {
         self.isRectangular = isRectangular
+        self.isSticky = isSticky
         self.label = label
         self.icon = icon
         self.type = type

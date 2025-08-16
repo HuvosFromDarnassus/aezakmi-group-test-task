@@ -18,40 +18,39 @@ final class RemoteControlViewModel: ObservableObject {
     
     var connectionStatus: ConnectionStatus = DeviceManager.shared.currentDevice?.status ?? .empty
     let topButtonsGrid: [[RemoteButtonConfig?]] = [
-        [RemoteButtonConfig(isRectangular: true, label: "", icon: "",   type: .channel)],
-        [RemoteButtonConfig(label: "", icon: "power",                   type: .power),
-         RemoteButtonConfig(label: "", icon: "house",                   type: .home),
-         RemoteButtonConfig(label: "", icon: "back",                    type: .back)],
-        [RemoteButtonConfig(label: "MENU", icon: "",                    type: .menu),
-         RemoteButtonConfig(label: "", icon: "volume-off",              type: .mute),
-         RemoteButtonConfig(label: "", icon: "door-enter",              type: .enter)],
-        [RemoteButtonConfig(isRectangular: true, label: "", icon: "",   type: .volume)]
+        [RemoteButtonConfig(isRectangular: true, label: "", icon: "",       type: .channel)],
+        [RemoteButtonConfig(isSticky: true, label: "", icon: "power",       type: .power),
+         RemoteButtonConfig(label: "", icon: "house",                       type: .home),
+         RemoteButtonConfig(label: "", icon: "back",                        type: .back)],
+        [RemoteButtonConfig(label: "MENU", icon: "",                        type: .menu),
+         RemoteButtonConfig(isSticky: true, label: "", icon: "volume-off",  type: .mute),
+         RemoteButtonConfig(label: "", icon: "door-enter",                  type: .enter)],
+        [RemoteButtonConfig(isRectangular: true, label: "", icon: "",       type: .volume)]
     ]
     let dPadGrid: [RemoteButtonConfig?] = [
-        RemoteButtonConfig(label: "", icon: "chevron-up",               type: .up),
-        RemoteButtonConfig(label: "", icon: "chevron-down",             type: .down),
-        RemoteButtonConfig(label: "", icon: "chevron-left",             type: .left),
-        RemoteButtonConfig(label: "", icon: "chevron-right",            type: .right),
-        RemoteButtonConfig(label: "OK", icon: "",                       type: .ok)
+        RemoteButtonConfig(label: "", icon: "chevron-up",                   type: .up),
+        RemoteButtonConfig(label: "", icon: "chevron-down",                 type: .down),
+        RemoteButtonConfig(label: "", icon: "chevron-left",                 type: .left),
+        RemoteButtonConfig(label: "", icon: "chevron-right",                type: .right),
+        RemoteButtonConfig(label: "OK", icon: "",                           type: .ok)
     ]
     let numpadGrid: [[RemoteButtonConfig?]] = [
-        [RemoteButtonConfig(label: "1", icon: "",                       type: .one),
-         RemoteButtonConfig(label: "4", icon: "",                       type: .four),
-         RemoteButtonConfig(label: "7", icon: "",                       type: .seven),
-         RemoteButtonConfig(label: "LIST", icon: "",                    type: .list)],
-        [RemoteButtonConfig(label: "2", icon: "",                       type: .two),
-         RemoteButtonConfig(label: "5", icon: "",                       type: .five),
-         RemoteButtonConfig(label: "8", icon: "",                       type: .eight),
-         RemoteButtonConfig(label: "0", icon: "",                       type: .zero)],
-        [RemoteButtonConfig(label: "3", icon: "",                       type: .three),
-         RemoteButtonConfig(label: "6", icon: "",                       type: .six),
-         RemoteButtonConfig(label: "9", icon: "",                       type: .nine),
-         RemoteButtonConfig(label: "OK", icon: "",                      type: .ok)]
+        [RemoteButtonConfig(label: "1", icon: "",                           type: .one),
+         RemoteButtonConfig(label: "4", icon: "",                           type: .four),
+         RemoteButtonConfig(label: "7", icon: "",                           type: .seven),
+         RemoteButtonConfig(label: "LIST", icon: "",                        type: .list)],
+        [RemoteButtonConfig(label: "2", icon: "",                           type: .two),
+         RemoteButtonConfig(label: "5", icon: "",                           type: .five),
+         RemoteButtonConfig(label: "8", icon: "",                           type: .eight),
+         RemoteButtonConfig(label: "0", icon: "",                           type: .zero)],
+        [RemoteButtonConfig(label: "3", icon: "",                           type: .three),
+         RemoteButtonConfig(label: "6", icon: "",                           type: .six),
+         RemoteButtonConfig(label: "9", icon: "",                           type: .nine),
+         RemoteButtonConfig(label: "OK", icon: "",                          type: .ok)]
     ]
     var alertViewData: AlertViewData?
     
     private var cancellables = Set<AnyCancellable>()
-    private let tvEmulatorURL = URL(string: "ws://192.168.100.68:3001")
     private var tvToken: String?
     private var tvClient: WebOSClientProtocol?
     
@@ -59,10 +58,16 @@ final class RemoteControlViewModel: ObservableObject {
     
     init() {
         setupBindings()
-        setupTvClient()
     }
     
     // MARK: Events
+    
+    func setupTvClient(with emulatorIP: String) {
+        guard let url = URL(string: "ws://\(emulatorIP):3001") else { return }
+        tvClient = WebOSClient(url: url, delegate: self, shouldLogActivity: true)
+        tvClient?.connect()
+        tvClient?.send(.register(pairingType: .pin, clientKey: tvToken))
+    }
     
     func didTapButton(_ button: RemoteControlViewData) {
         guard let tvClient else { return }
@@ -117,12 +122,6 @@ final class RemoteControlViewModel: ObservableObject {
             .store(in: &cancellables)
     }
     
-    private func setupTvClient() {
-        tvClient = WebOSClient(url: tvEmulatorURL!, delegate: self, shouldLogActivity: true)
-        tvClient?.connect()
-        tvClient?.send(.register(pairingType: .pin, clientKey: tvToken))
-    }
-    
 }
 
 // MARK: - WebOSClientDelegate
@@ -135,14 +134,29 @@ extension RemoteControlViewModel: WebOSClientDelegate {
         }
     }
     
+    func didConnect() {
+        Task { @MainActor in
+            alertViewData = AlertViewData(
+                title: "Подключение завершено",
+                message: "Устройство подключено к эмулятору.",
+                actionTitle: "OK",
+                action: { [weak self] in
+                    self?.alertViewData = nil
+                }
+            )
+        }
+    }
+    
     func didReceiveNetworkError(_ error: (any Error)?) {
         guard let error else { return }
         Task { @MainActor in
             alertViewData = AlertViewData(
                 title: "Error",
                 message: error.localizedDescription,
-                actionTitle: nil,
-                action: nil
+                actionTitle: "OK",
+                action: { [weak self] in
+                    self?.alertViewData = nil
+                }
             )
         }
     }

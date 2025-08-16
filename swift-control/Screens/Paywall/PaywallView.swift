@@ -32,8 +32,9 @@ struct PaywallView: View {
             
             VStack(alignment: .leading, spacing: 16) {
                 Spacer()
-                    .frame(height: UIScreen.main.bounds.height / 1.8)
+                    .frame(height: UIScreen.main.bounds.height / 2.3)
 
+                featuresList
                 textAndToggle
                 actionButton
                 bottomButtons
@@ -49,11 +50,17 @@ struct PaywallView: View {
             }
         }
         .background(.backgroundPrimary)
-        .fullScreenCover(isPresented: $showWebView) {
+        .sheet(isPresented: $showWebView) {
             showWebView = false
         } content: {
             if let urlToOpen {
                 SafariView(url: urlToOpen)
+                    .presentationDetents([.fraction(0.99)])
+                    .presentationDragIndicator(.hidden)
+                    .presentationBackground(.clear)
+                    .presentationCornerRadius(20)
+                    .presentationContentInteraction(.scrolls)
+                    .presentationCompactAdaptation(.none)
             }
         }
     }
@@ -79,6 +86,15 @@ struct PaywallView: View {
                 .padding(.top, 52)
             }
             Spacer()
+        }
+    }
+    
+    @ViewBuilder
+    private var featuresList: some View {
+        HStack(alignment: .center, spacing: 9) {
+            ForEach(PaywallFeaturesViewData.allCases, id: \.self) { feature in
+                PaywallFeatureView(icon: feature.icon, text: feature.text)
+            }
         }
     }
     

@@ -7,18 +7,31 @@
 
 import SwiftUI
 
+final class TabBarState: ObservableObject {
+
+    @Published var isHidden: Bool = false
+
+}
+
 struct MainTabView: View {
     
     // MARK: Properties
     
+    @StateObject private var tabBarState = TabBarState()
     @State private var selectedTab: Tab = .control
 
     // MARK: Body
     
     var body: some View {
-        ZStack {
+        ZStack(alignment: .bottom) {
             contentView
+                .environmentObject(tabBarState)
+            
             TabBarView(selectedTab: $selectedTab)
+                .transition(.move(edge: .bottom))
+                .animation(.easeInOut(duration: 0.3), value: tabBarState.isHidden)
+                .opacity(tabBarState.isHidden ? 0 : 1)
+                .offset(y: tabBarState.isHidden ? 100 : 0)
         }
     }
     
