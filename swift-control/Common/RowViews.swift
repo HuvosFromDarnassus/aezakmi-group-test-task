@@ -19,11 +19,12 @@ struct SettingsRow: View {
         ZStack {
             Color(.backgroundSecondary)
             HStack {
-                item.icon
-                Text(item.title)
+                Label(item.title, image: item.icon)
                     .font(Fonts.Roboto.regular.swiftUIFont(fixedSize: 17))
                     .foregroundStyle(.textAndIcons)
+                
                 Spacer()
+                
                 Image(.chevronRight)
                     .foregroundStyle(.textAndIcons)
                     .opacity(0.15)
@@ -49,9 +50,8 @@ struct ConnectionItemRow: View {
     var body: some View {
         ZStack {
             Color(status.deviceCellBackgroundColor)
-            HStack(spacing: 10) {
-                Image(.tvOpaque)
-                Text(name)
+            HStack(spacing: 10) {                
+                Label(name, image: .tvOpaque)
                     .font(Fonts.Roboto.regular.swiftUIFont(fixedSize: 17))
                     .foregroundStyle(.textAndIcons)
                 

@@ -38,9 +38,8 @@ struct ConnectionView: View {
         }
     }
     
-    // MARK: Private
+    // MARK: Views
     
-    @ViewBuilder
     private var contentView: some View {
         VStack(alignment: .leading) {
             topTitles
@@ -146,7 +145,6 @@ struct ConnectionView: View {
         .frame(maxWidth: .infinity)
     }
     
-    @ViewBuilder
     private var deviceList: some View {
         List {
             ForEach(0..<viewModel.devices.count + 1, id: \.self) { index in

@@ -37,9 +37,8 @@ struct InstructionView: View {
         }
     }
     
-    // MARK: Private
+    // MARK: Views
     
-    @ViewBuilder
     private var closeButton: some View {
         VStack {
             HStack {

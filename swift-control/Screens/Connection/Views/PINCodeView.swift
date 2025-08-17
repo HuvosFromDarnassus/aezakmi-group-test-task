@@ -36,7 +36,7 @@ struct PINCodeView: View {
         }
     }
     
-    // MARK: Private
+    // MARK: Views
     
     @ViewBuilder
     private var topTitles: some View {
@@ -51,7 +51,6 @@ struct PINCodeView: View {
             .padding(.bottom, 18)
     }
     
-    @ViewBuilder
     private var digitsRectangles: some View {
         HStack(spacing: 12) {
             ForEach(0..<pinLength, id: \.self) { index in
@@ -84,7 +83,6 @@ struct PINCodeView: View {
         }
     }
     
-    @ViewBuilder
     private var hiddenTextField: some View {
         TextField("", text: $pin)
             .keyboardType(.numberPad)
@@ -101,6 +99,8 @@ struct PINCodeView: View {
             .frame(width: 1, height: 1)
             .opacity(0.01)
     }
+    
+    // MARK: Private
     
     private func getDigit(at index: Int) -> String {
         guard index < pin.count else { return "" }

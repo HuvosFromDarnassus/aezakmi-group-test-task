@@ -74,9 +74,8 @@ struct OnboardingView: View {
         }
     }
     
-    // MARK: Private
+    // MARK: Views
     
-    @ViewBuilder
     private var fakeReviews: some View {
         VStack(alignment: .center, spacing: 21) {
             ForEach(OnboardingFakeReviewsViewData.allCases, id: \.self) { review in
@@ -100,7 +99,6 @@ struct OnboardingView: View {
             .padding(.bottom, 16)
     }
     
-    @ViewBuilder
     private var bottomButtons: some View {
         HStack {
             Button(Strings.Paywall.terms) {

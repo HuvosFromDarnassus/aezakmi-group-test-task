@@ -65,9 +65,8 @@ struct PaywallView: View {
         }
     }
     
-    // MARK: Private
+    // MARK: Views
     
-    @ViewBuilder
     private var closeButton: some View {
         VStack {
             HStack {
@@ -89,7 +88,6 @@ struct PaywallView: View {
         }
     }
     
-    @ViewBuilder
     private var featuresList: some View {
         HStack(alignment: .center, spacing: 9) {
             ForEach(PaywallFeaturesViewData.allCases, id: \.self) { feature in
@@ -121,7 +119,6 @@ struct PaywallView: View {
         .cornerRadius(15)
     }
     
-    @ViewBuilder
     private var actionButton: some View {
         ActionButton(title: Strings.Common.continue) {
             isLoading = true
@@ -134,7 +131,6 @@ struct PaywallView: View {
         .padding(.bottom, 16)
     }
     
-    @ViewBuilder
     private var bottomButtons: some View {
         HStack {
             Button(Strings.Paywall.terms) {

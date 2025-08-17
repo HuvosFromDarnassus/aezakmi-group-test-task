@@ -56,9 +56,8 @@ struct SettingsView: View {
         }
     }
     
-    // MARK: Private
+    // MARK: Views
     
-    @ViewBuilder
     private var settingsItems: some View {
         List(SettingsItem.allCases, id: \.self) { item in
             SettingsRow(item: item)

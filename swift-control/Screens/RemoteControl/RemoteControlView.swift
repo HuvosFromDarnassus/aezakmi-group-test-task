@@ -99,9 +99,8 @@ struct RemoteControlView: View {
         .animation(.easeInOut(duration: 0.25), value: showEmulatorURLAlert)
     }
     
-    // MARK: Private
+    // MARK: Views
     
-    @ViewBuilder
     private var statusBar: some View {
         ZStack {
             BackgroundGradient(
@@ -110,9 +109,7 @@ struct RemoteControlView: View {
                 colors: [viewModel.connectionStatus.statusBarBackgroundColor]
             )
             HStack(spacing: 11) {
-                viewModel.connectionStatus.statusBarIcon
-                    .foregroundColor(viewModel.connectionStatus.statusBarTextColor)
-                Text(viewModel.connectionStatus.statusBarText)
+                Label(viewModel.connectionStatus.statusBarText, image: viewModel.connectionStatus.statusBarIcon)
                     .font(Fonts.Roboto.regular.swiftUIFont(fixedSize: 17))
                     .foregroundColor(viewModel.connectionStatus.statusBarTextColor)
             }
@@ -121,7 +118,6 @@ struct RemoteControlView: View {
         .padding(.horizontal, 16)
     }
     
-    @ViewBuilder
     private var topButtons: some View {
         HStack(spacing: 12) {
             ForEach(viewModel.topButtonsGrid.indices, id: \.self) { column in
@@ -185,7 +181,6 @@ struct RemoteControlView: View {
         }
     }
     
-    @ViewBuilder
     private var dPad: some View {
         ZStack {
             SemicircleButton(label: "", icon: "chevron-up", radius: Constants.Sizes.dPadRedius, isAccent: true, orientation: .top) {
@@ -206,7 +201,6 @@ struct RemoteControlView: View {
         }
     }
     
-    @ViewBuilder
     private var numpad: some View {
         HStack(spacing: 8) {
             ForEach(viewModel.numpadGrid.indices, id: \.self) { column in
@@ -227,7 +221,6 @@ struct RemoteControlView: View {
         }
     }
     
-    @ViewBuilder
     private var dPadNumpadButton: some View {
         VStack {
             HStack {
@@ -244,6 +237,8 @@ struct RemoteControlView: View {
         .padding(.trailing, 25)
         .padding(.bottom, 15)
     }
+    
+    // MARK: Private
 
     private func offset(for type: RemoteControlViewData, pad: CGFloat) -> CGSize {
         let r = pad * 0.35

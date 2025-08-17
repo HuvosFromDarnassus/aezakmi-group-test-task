@@ -26,13 +26,13 @@ enum SettingsItem: CaseIterable {
         }
     }
     
-    var icon: Image {
+    var icon: ImageResource {
         switch self {
-        case .instruction:  .init(.questionMarkLight)
-        case .privacy:      .init(.shield)
-        case .terms:        .init(.info)
-        case .share:        .init(.share)
-        case .support:      .init(.headphones)
+        case .instruction:  .questionMarkLight
+        case .privacy:      .shield
+        case .terms:        .info
+        case .share:        .share
+        case .support:      .headphones
         }
     }
     

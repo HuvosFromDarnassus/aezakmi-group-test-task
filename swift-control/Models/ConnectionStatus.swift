@@ -15,13 +15,13 @@ enum ConnectionStatus {
     case disconnected
     case error
     
-    var statusBarIcon: Image {
+    var statusBarIcon: ImageResource {
         switch self {
-        case .empty:        .init(.tvLinethrough)
-        case .connected:    .init(.tv)
-        case .disconnected: .init(.tvLinethroughRed)
+        case .empty:        .tvLinethrough
+        case .connected:    .tv
+        case .disconnected: .tvLinethroughRed
         default:
-                .init(.tv)
+                .tv
         }
     }
     

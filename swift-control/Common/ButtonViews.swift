@@ -266,9 +266,8 @@ struct SemicircleButton: View {
         .buttonStyle(.plain)
     }
     
-    // MARK: Private
+    // MARK: Views
     
-    @ViewBuilder
     private var circleSectorBackground: some View {
         SectorShape(orientation: orientation)
             .fill(

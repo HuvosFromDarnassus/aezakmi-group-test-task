@@ -42,7 +42,7 @@ struct BackgroundGradient: View {
             )
     }
     
-    // MARK: Private
+    // MARK: Views
     
     @ViewBuilder
     private var shapeView: some View {

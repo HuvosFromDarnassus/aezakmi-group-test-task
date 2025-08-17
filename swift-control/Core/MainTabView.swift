@@ -35,7 +35,7 @@ struct MainTabView: View {
         }
     }
     
-    // MARK: Private
+    // MARK: Views
 
     @ViewBuilder
     private var contentView: some View {
